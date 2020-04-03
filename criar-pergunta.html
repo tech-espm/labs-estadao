@@ -6,8 +6,6 @@
         <link rel="stylesheet" href="css.css">
 
         <style>
-            h1{ text-align: left;
-                font-size: 35px;}
 
             form {text-align: center;
                   }
@@ -30,14 +28,14 @@
         
         <div>
             <form action="" method ="POST">
-                <input type="text" placeholder="insira a pergunta" id="pergunta">
+                <input type="text" placeholder="insira a pergunta" id="pergunta" required>
                 <br/>
 
                 <input id="boxresp" name="r" class="select" value="r1" type="radio">
                 <input type="text" class="resp" placeholder="Resposta 1"><br/>
                
 
-                <input id="boxresp" name="r" class="select" value="r2" type="radio">
+                <input id="boxresp" name="r" class="select" value="r2" type="radio" required>
                 <input type="text" class="resp" placeholder="Resposta 2"><br/>
                
 
@@ -53,7 +51,11 @@
                 <textarea name="descricao" placeholder="Justifique a resposta/introduza a notícia"
                 cols="50" rows="20"></textarea><br/>
                 
+                
+                <button name="editquestion" class="btn btn-white" type="button">Editar pergunta</button>
 
+                &nbsp;&nbsp;&nbsp;
+                
                 <button name="clear" class="btn btn-white" type="reset">Limpar</button>
                 
                 &nbsp;&nbsp;&nbsp;

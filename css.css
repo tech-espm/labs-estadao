@@ -42,3 +42,10 @@
     top:5px;
     box-shadow:none;
 }
+h1{ text-align: left;
+    font-size: 35px;
+}
+#btnend{
+    margin: 5em 0 2em 0;
+    
+}
