@@ -9,42 +9,51 @@
 
             form {text-align: center;}
             
-            #titulo {padding: 10px;
+            #titulo {padding: 2px;
                       width: 550px;
                       font-weight: bold;
                       font-size: 25px;
-                      text-align: center;}
-                  
+                      text-align: left;}
+            
+            label {font-size: 25px;
+                    }
+            
+            form textarea{padding: 8px;
+                          font-size: 15px;
+                          font-style: italic;
+                          }
+            #btnend{
+                    margin: 2em 0 2em 0;}
         </style>
     </head>
     
     <body>
-        <h1>Criar Quz</h1>
+        <h1>Criar Quiz</h1>
         <hr/>
         <br/>
     
-        <div>
+        <div id="conteudo">
             <form action="" method ="POST">
-                <input type="text" placeholder="Título do Quiz" id="titulo"/><br/><br/>
+                <label for="titulo">Nome do quiz: </label>
+                <input type="text" id="titulo"/><br/><br/>
                 
-                
-                <button name="selectquestion" type="button" class="btn btn-blue">Selecione uma pergunta</button> <br/><br/>
-                
-                <button name="addquestion" class="btn2 btn-white" type="button">+</button>
+                <label>Descrição: </label>
+                <textarea name="descricao"
+                cols="71" rows="3"></textarea><br/>
             
                 
 
                 
                 
                 <div id="btnend">
-                <button name="backgr" type="button" class="btn btn-white">Definir plano de fundo</button> <br/><br/>
                 
                 <button name="clear" class="btn btn-white" type="reset">Limpar</button>
                 
                 &nbsp;&nbsp;&nbsp;
 
-                <button name="save" class="btn btn-blue" type="submit">Salvar</button>
+                <button name="create" class="btn btn-blue" type="submit">Criar</button>
                 </div>
+            </form>
         </div>
     
     
