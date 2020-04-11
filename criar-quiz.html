@@ -15,15 +15,17 @@
                       font-size: 25px;
                       text-align: left;}
             
-            label {font-size: 25px;
-                    }
+            label {font-size: 25px;}
             
             form textarea{padding: 8px;
                           font-size: 15px;
-                          font-style: italic;
                           }
-            #btnend{
-                    margin: 2em 0 2em 0;}
+            #btns{margin: 2em 0 2em 0;}
+            
+            .radio {cursor: pointer;}
+            
+            #estilo {margin-right: 10px}
+            
         </style>
     </head>
     
@@ -32,20 +34,22 @@
         <hr/>
         <br/>
     
+        
         <div id="conteudo">
             <form action="" method ="POST">
                 <label for="titulo">Nome do quiz: </label>
-                <input type="text" id="titulo"/><br/><br/>
+                <input type="text" id="titulo" required/><br/><br/>
                 
-                <label>Descrição: </label>
-                <textarea name="descricao"
-                cols="71" rows="3"></textarea><br/>
+                <label for="descricao">Descrição: </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <textarea id="descricao" cols="66" rows="3"></textarea><br/>
             
+                <label id="estilo">Estilo:</label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="type" class="radio" value="Normal" checked="checked"/>Tradicional &nbsp;&nbsp;&nbsp;
+                <input type="radio" name="type" class="radio" value="Points"/>Personalidade
                 
-
                 
                 
-                <div id="btnend">
+                <div id="btns">
                 
                 <button name="clear" class="btn btn-white" type="reset">Limpar</button>
                 
@@ -55,7 +59,6 @@
                 </div>
             </form>
         </div>
-    
     
     
     
