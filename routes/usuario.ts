@@ -28,6 +28,14 @@ router.all("/alterar", wrap(async (req: express.Request, res: express.Response) 
 	}
 }));
 
+router.get("/grade", wrap(async (req: express.Request, res: express.Response) => {
+	let u = await Usuario.cookie(req);
+	if (!u || !u.admin)
+		res.redirect(appsettings.root + "/acesso");
+	else
+		res.render("usuario/grade", { titulo: "Gerenciar Usuários", usuario: u, lista: await Usuario.listar() });
+}));
+
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
 	if (!u || !u.admin)
