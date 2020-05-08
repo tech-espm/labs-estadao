@@ -1,19 +1,21 @@
 ﻿<form method="post" action="<%- root %>/login">
-	<div style="max-width: 400px; margin: 0 auto; padding: 10% 15px;">
-		<div class="panel panel-default no-margin-bottom">
+	<div style="max-width: 400px; margin: 0 auto; padding: 10% 15px ; height: 50vh;">
+		<div style = "background-color: #fff; height: 600px; border-radius: 16px;" class="shadow-box panel-default no-margin-bottom">
 			<div class="panel-body">
+				<img class="profile-img" style="display: block; margin-left: auto; margin-right: auto; margin-top: 30px; " src="<%- root %>/imagens/estadao.gif"  width="100" height="100"/>
+				<h2 style = " text-align: center; margin-top: 35px;">Bem vindo !</h2>
 				<div class="form-group">
 					<label for="login">Usuário</label>
-					<input name="login" type="text" id="login" class="form-control text-uppercase" spellcheck="false" />
+					<input name="login" type="text" id="login" class="login-input form-control text-uppercase" spellcheck="false" />
 				</div>
 				<div class="form-group">
 					<label for="senha">Senha</label>
-					<input name="senha" type="password" id="senha" class="form-control" />
+					<input name="senha" type="password" id="senha" class=" login-input form-control" />
 				</div>
 				<% if (mensagem) { %>
 				<div class="alert alert-danger"><%=mensagem %></div>
 				<% } %>
-				<input type="submit" value="Login" class="btn btn-primary btn-block" />
+				<input type="submit" value="Login" class="login-btt btn btn-primary btn-block" />
 			</div>
 		</div>
 	</div>
