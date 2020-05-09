@@ -5,6 +5,10 @@
 			<div class="panel-body no-bottom">
 
                 <div class="form-group">
+                    <input type="file" id="filepond" data-max-file-size="5MB" accept="image/png, image/jpeg, image/gif">
+                </div>
+
+                <div class="form-group">
                     <label for="titulo">Nome do quiz:</label>
                     <input type="text" id="titulo" class="form-control" required  />
                 </div>
@@ -34,4 +38,41 @@
 </div>
 
 <%- contentFor("styles") %>
-<!-- Olá mundo! -->
+<style type="text/css">
+
+.filepond--root { 
+    font-size: 1.5rem; 
+}
+
+</style>
+
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+"use strict";
+
+//FilePond Config
+FilePond.registerPlugin(
+    FilePondPluginImagePreview,
+    FilePondPluginFileValidateSize,
+    FilePondPluginFileValidateType,
+);
+
+const inputImg = document.getElementById("filepond");
+const pond = FilePond.create(inputImg, {
+    labelIdle: `Arraste & Solte sua imagem ou <span class="filepond--label-action">Selecione um Aquivo</span>`,
+    labelMaxFileSizeExceeded: "Tamanho do arquivo excedeu o limite",
+    labelFileTypeNotAllowed: "Tipo do arquivo não permitido"
+});
+
+
+
+</script>
+
+
+
+
+
+
+
+
