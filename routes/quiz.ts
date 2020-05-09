@@ -21,4 +21,12 @@ router.get("/editar", wrap(async (req: express.Request, res: express.Response) =
 		res.render("quiz/editar", { titulo: "Editar Quiz", usuario: u });
 }));
 
+router.get("/jogar", wrap(async (req: express.Request, res: express.Response) => {
+	let u = await Usuario.cookie(req);
+	if (!u)
+		res.redirect(appsettings.root + "/login");
+	else
+		res.render("quiz/jogar", { layout:"layout-jogo", titulo: "Jogar", usuario: u });
+}));
+
 export = router;
