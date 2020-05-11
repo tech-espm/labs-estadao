@@ -2,7 +2,12 @@
     // Express
     import express = require('express');
     const router = express.Router();
+
+    // Multer
     import multer = require("multer");
+
+    // Util
+    import jsonRes = require("../../utils/jsonRes");
 
     // Error Handler
     import wrap = require("express-async-error-wrapper");
@@ -17,16 +22,19 @@
 
 
 // ROTAS
-
     // Salvar Quiz
-    router.post('/salvar', multer().single("imagem"), wrap(async (req:express.Request, res: express.Response) => {
-        let q = req.body as Quiz;
+    router.post('/salvar', multer().single("image"), wrap(async (req:express.Request, res: express.Response) => {
 
-        if(q){
-            // Usar a funcao saveQuiz() 
-            res.json(q.id);
-        }
-        res.status(400);
+        console.log(req.body)
+        
+        // jsonRes(res, 400, "OK")
+        return res.send(req.body)
+        // if(q){
+        //     // Usar a funcao saveQuiz() 
+        //     // res.json(q.id);
+        //     console.log(q.nome)
+        // }
+        // res.status(400);
         /*
         $.ajax({
             ...

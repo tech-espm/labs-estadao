@@ -24,6 +24,7 @@ import wrap = require("express-async-error-wrapper");
 import cookieParser = require("cookie-parser"); // https://stackoverflow.com/a/16209531/3569421
 import path = require("path");
 import appsettings = require("./appsettings");
+import bodyParser = require('body-parser')
 
 // @@@ Configura o cache, para armazenar as 200 últimas páginas
 // já processadas, por ordem de uso
@@ -43,6 +44,8 @@ app.disable("x-powered-by");
 app.disable("etag");
 
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser.json());
 
 //import Usuario = require("./models/usuario");
 // Parei de usar Usuario.pegarDoCookie como middleware, porque existem muitas requests
@@ -104,6 +107,7 @@ app.use("/usuario", require("./routes/usuario"));
 // API
 app.use("/api/perfil", require("./routes/api/perfil"));
 app.use("/api/usuario", require("./routes/api/usuario"));
+app.use("/api/quiz", require("./routes/api/quiz"));
 
 // Depois de registrados todos os caminhos das rotas e seus
 // tratadores, registramos os tratadores que serão chamados
@@ -144,5 +148,6 @@ app.use(wrap(async (req: express.Request, res: express.Response, next: express.N
 app.set("port", process.env.PORT || 3000);
 
 const server = app.listen(app.get("port"), process.env.IP || "127.0.0.1", () => {
+	console.log("Server OK")
 	debug("Express server listening on port " + server.address()["port"]);
 });
