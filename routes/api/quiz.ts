@@ -24,8 +24,9 @@
 // ROTAS
     // Salvar Quiz
     router.post('/salvar', multer().single("image"), wrap(async (req:express.Request, res: express.Response) => {
-
+        
         console.log(req.body)
+        
         
         // jsonRes(res, 400, "OK")
         return res.send(req.body)
@@ -37,7 +38,7 @@
         // res.status(400);
         /*
         $.ajax({
-            ...
+            ...https://matematicabasica.net/wp-content/uploads/2019/02/triangulo-de-pascal-11-1.png
             success: function(data) {
                 location.href = "/quiz/editar?id=" + data;
             }
