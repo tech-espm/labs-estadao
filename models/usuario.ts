@@ -107,7 +107,7 @@ export = class Usuario {
 			u.idperfil = row.idperfil as number;
 			u.admin = (u.idperfil === Usuario.IdPerfilAdmin);
 
-			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure, sameSite: "none" });
+			res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 		});
 
 		return [r, u];
@@ -147,7 +147,7 @@ export = class Usuario {
 
 				this.nome = nome;
 
-				res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure, sameSite: "none" });
+				res.cookie(appsettings.cookie, cookieStr, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: true, path: "/", secure: appsettings.cookieSecure });
 			} else {
 				await sql.query("update usuario set nome = ? where id = ?", [nome, this.id]);
 
