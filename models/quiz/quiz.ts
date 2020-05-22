@@ -33,11 +33,13 @@ export = class Quiz {
 
     // Funcao para Criar um novo QUIZ
     public static async createQuiz(q: Quiz, imagem: any): Promise<string>{
+        let res: string = null;
+        
         await Sql.conectar(async (sql: Sql)=> {
-            try{
+            try {
                 await sql.beginTransaction();
 
-                await sql.query('INSERT INTO quiz (quiz_nome, quiz_desc, quiz_img, id_tipo) VALUES (?, ?, ?, ?)', [q.nome, q.desc, q.img, q.tipo_id]); //TODO falta a descricao no DB
+                await sql.query('INSERT INTO quiz (quiz_nome, quiz_desc, quiz_img, id_tipo) VALUES (?, ?, 1, ?)', [q.nome, q.desc, q.tipo_id]); //TODO falta a descricao no DB
 
                 q.id = await sql.scalar('SELECT LAST_INSERT_ID()') as number; //* Getting the quiz ID - Send to the Pergunta!!
                 
@@ -48,14 +50,12 @@ export = class Quiz {
 
 
                 await sql.commit()
+            } catch (e) {
+                res = (e.message || e.toString());
             }
-            catch(e){
-                throw e;
-            }
-
         })
         
-        return;
+        return res;
     }
 
     // Funcao para Salvar o QUIZ

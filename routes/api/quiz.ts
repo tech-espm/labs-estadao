@@ -8,6 +8,7 @@
 
     // Util
     import jsonRes = require("../../utils/jsonRes");
+    import validaArquivo = require("../../utils/validaArquivo");
 
     // Error Handler
     import wrap = require("express-async-error-wrapper");
@@ -29,15 +30,12 @@
         if(q){
             q.nome = req.body.titulo
             q.desc = req.body.desc
-            q.img = parseInt(req.body.versao)
+            //q.img = parseInt(req.body.versao)
             q.tipo_id = parseInt(req.body.tipo)
-
             // q.img = parseInt(req.body.versao)
-            
         }
         
-        console.log(q)
-        jsonRes(res, 400, q && req["imagem"] ? await Quiz.createQuiz(q, req["imagem"]) : "Dados inválidos");
+        jsonRes(res, 400, q && validaArquivo(req["file"]) ? await Quiz.createQuiz(q, req["file"]) : "Dados inválidos");
 
         // jsonRes(res, 400, "OK")
         // Send the quiz ID

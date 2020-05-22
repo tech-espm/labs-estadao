@@ -3,117 +3,65 @@
 		<form id="form-quiz" class="panel panel-default" action="#" enctype="multipart/form-data">
 			<div class="panel-heading">Informações do Quiz</div>
 			<div class="panel-body no-bottom">
+				<div class="form-group">
+					<label for="titulo">Nome do quiz:</label>
+					<input type="text" id="titulo" name="titulo" class="form-control" required />
+				</div>
 
-                <div class="form-group">
-                    <!-- <input type="file" id="imagem" name="imagem" data-max-file-size="5MB" accept="image/png, image/jpeg, image/gif" > -->
-                </div>
+				<div class="form-group">
+					<label for="descricao">Descrição: </label>
+					<textarea id="desc" rows="3" name="desc" class="form-control" style="resize: vertical;"></textarea>
+				</div>
 
-                <div class="form-group">
-                    <label for="titulo">Nome do quiz:</label>
-                    <input type="text" id="titulo" name="titulo" class="form-control" required  />
-                </div>
+				<div class="form-group">
+					<label for="tipo">Tipo:</label>
+					<select id="tipo" class="form-control" name="tipo" size="1">
+						<option value="" data-description="">Selecione...</option>
+						<% for (var i = 0; i < lista.length; i++) { %>
+						<option value="<%= lista[i].tipo_id %>" data-description="<%= lista[i].tipo_desc %>"> <%= lista[i].tipo_nome %></option>
+						<% } %>
+					</select>
+					<i id="lblTipo"></i>
+				</div>
 
-                <div class="form-group">
-                    <label for="descricao">Descrição: </label>
-                    <textarea id="desc" rows="3" name="desc" class="form-control"></textarea>
-                </div>
+				<div class="form-group">
+					<input type="file" id="imagem" name="imagem" style="display: none;" />
+				</div>
+			</div>
 
-                <div class="form-group">
-                    <label for="tipo">Tipo :</label>
-                    <select id="tipo" class="form-control" name="tipo" size="1">
-
-                        <option>Selecione...</option>
-                        <% for (var i = 0; i < lista.length; i++) { %>
-                            <option value="<%= lista[i].tipo_id %>"> <%= lista[i].tipo_nome %></option>
-                        <% } %>
-
-                    </select>
-                </div>
-            </div>
-
-            <div class="panel-footer text-center ">
-                <button name="clear" class="btn btn-default btn-outline" type="reset">Limpar</button>
-                <button name="create" class="btn btn-success" type="submit">Criar</button>
-                <!--<input value="Salvar Alterações" class="btn btn-primary btn-lg btn-block" type="submit" />-->
-            </div>
-        </form>
-    </div>
+			<div class="panel-footer">
+				<button class="btn btn-default btn-outline" type="reset">Limpar</button>
+				<button class="btn btn-success" type="submit">Criar</button>
+				<!--<input value="Salvar Alterações" class="btn btn-primary btn-lg btn-block" type="submit" />-->
+			</div>
+		</form>
+	</div>
 </div>
 
 <%- contentFor("styles") %>
 <style type="text/css">
-
-.filepond--root { 
-    font-size: 1.5rem; 
-}
-
+	.filepond--root {
+		font-size: 1.5rem;
+	}
 </style>
-
 
 <%- contentFor("scripts") %>
 <script type="text/javascript">
-    "use strict";
+	"use strict";
 
-    // //FilePond Config
-    // FilePond.registerPlugin(
-    //     FilePondPluginImagePreview,
-    //     FilePondPluginFileValidateSize,
-    //     FilePondPluginFileValidateType,
-    // );
+	prepareFilePond("imagem", true);
 
-    // const inputImg = document.getElementById("imagem");
-    // const pond = FilePond.create(inputImg, {
-    //     labelIdle: `Arraste & Solte sua imagem ou <span class="filepond--label-action">Selecione um Aquivo</span>`,
-    //     labelMaxFileSizeExceeded: "Tamanho do arquivo excedeu o limite",
-    //     labelFileTypeNotAllowed: "Tipo do arquivo não permitido"
-    // });
+	$("#tipo").on("change", function () {
+		$("#lblTipo").text($("#tipo option:selected").attr("data-description"));
+	});
 
-
-
-    // $("#form-quiz").submit(function (e) {
-    //     e.preventDefault();
-        
-    //     let titulo = document.getElementById("titulo").value;
-    //     let desc = document.getElementById("desc").value;
-    //     let file = document.getElementById("imagem").files;
-    //     let tipo = document.getElementById("tipo").value;
-    //     let img = 1;
-
-    //     var formData = new FormData();
-
-    //     formData.append("titulo", titulo)
-    //     formData.append("desc", desc)
-    //     formData.append("imagem", file)
-    //     formData.append("tipo", tipo)
-    //     formData.append("versao" , img)
-
-
-    //     console.log(formData)
-    //     $.ajax({
-    //         type: "POST",
-    //         enctype:'multipart/form-data',
-    //         url: '/api/quiz/salvar',
-    //         data: formData,
-    //         processData: false,
-    //         contentType: false,
-    //         success: function(r){
-    //             console.log("result",r)
-    //         },
-    //         error: function (e) {
-    //             console.log("some error", e);
-    //         }
-    //     });
-
-// });
-
-$("#form-quiz").validate({
+	$("#form-quiz").validate({
 		rules: {
 			titulo: {
-				required: true,
-				
+				required: true
 			},
 			desc: {
-				required: true,
+				required: false
 			},
 			tipo: {
 				required: true
@@ -121,14 +69,36 @@ $("#form-quiz").validate({
 		},
 
 		submitHandler: function (form) {
+			//if ($.active)
+			//	return;
+
 			if (JsonWebApi.active)
 				return;
 
+			var formData = new FormData(form);
+			addFilePondToFormData("imagem", formData);
+
 			Notification.wait();
 
-			JsonWebApi.postFormData("/api/quiz/salvar", form, function (response) {
+			// $.ajax({
+			// 	url: "/api/quiz/salvar",
+			// 	type: "POST",
+			// 	data: formData,
+			// 	processData: false,
+			// 	contentType: false,
+			// 	success: function(r) {
+			// 		Notification.hide();
+			// 		console.log("result",r)
+			// 	},
+			// 	error: function (e) {
+			// 		Notification.hide();
+			// 		console.log("some error", e);
+			// 	}
+			// });
+
+			JsonWebApi.postFormData("/api/quiz/salvar", formData, function (response) {
 				if (response.success) {
-					resetForm("#form");
+					resetForm("#form-quiz");
 					Notification.success("OK " + emoji.happy);
 				} else {
 					Notification.error(response.value, true);
@@ -136,16 +106,4 @@ $("#form-quiz").validate({
 			});
 		}
 	});
-
-
-    
-        
-    
 </script>
-
-
-
-
-
-
-
