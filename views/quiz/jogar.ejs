@@ -15,7 +15,7 @@
         header {
     		padding: 175px 25px 75px;
     		text-align: center;
-    		background-image: url('<%- root %>/imagens/user.png'); /*imagem do quiz*/
+    		background-image: url('<%- root %>/imagens/logo.png'); /*imagem do quiz*/
    			background-size: cover;
    		 	background-position: center; 
 		}
@@ -154,30 +154,32 @@
     }
 
     function iniciar() {
-        secao.fadeIn(400, "swing", exibirProximaQuestao);
+        secao.fadeOut(400, "swing", atualizar);
     }
 
     function exibirProximaQuestao() {
         var questao = questoes[questaoAtual];
+        var escolha = null;
         
-        // Vamos construir o html aqui. Existem outras alternativas...
         var html = '<h2>' + questao.titulo + '</h2>';
         
         for (var i = 0; i < questao.alternativas.length; i++) {
             
-            html += '<p class="radio">' +
-                '<label>' +
-                '<input type="radio" name="pergunta" onclick="habilitarBotao()" data-id="' +
+            html +=
+                '<button type="button" name="pergunta" class="btn btn-default btn-outline" onclick="escolha" data-id="' +
                 questao.alternativas[i].id +
                 '" value="' +
                 (questao.alternativas[i].correta ? '1' : '0') +
-                '" /> ' +
-                questao.alternativas[i].texto
-                '</label>' +
+                '" > ' +
+                questao.alternativas[i].texto +
+                '</button>' +
                 '</p>';
         }
         
-        html += '<p><button id="botao-proximo" type="button" onclick="responder()" class="btn btn-default" disabled="disabled">Próxima</button></p>';
+        if (escolha >= 0) {
+            responder();
+        }
+        //html += '<p><button id="botao-proximo" type="button" onclick="responder()" class="btn btn-default" disabled="disabled">Próxima</button></p>';
         
         secao.html(html);
         
@@ -186,7 +188,7 @@
             carregando = false;
         });
     }
-    
+
     function habilitarBotao() {
         // Só habilita o botão quando selecionar alguma alternativa
         $("#botao-proximo").prop("disabled", false);
@@ -200,10 +202,19 @@
             return;
         
         // Descobre se o usuário acertou
-        var opcao = $("#secao input:checked");
+        //var opcao = $("#secao button:checked");
         
-        if (opcao.val() === "1")
-            acertos++;
+        //if (opcao.val() == "1") {
+        if (escolha === "1") {
+                //O button correto deve ficar verde
+                //$("").prop("class", "btn btn-success");
+                acertos++;
+        } /*else {
+                //O button clicado deve ficar vermelho
+                $("").prop("class", "btn btn-danger");
+                //O button correto deve ficar verde
+                $("").prop("class", "btn btn-success");
+        } */
         
         // Armazena um objeto com o id da questão e da
         // resposta para enviar para o servidor ao final
@@ -212,9 +223,15 @@
             idResposta: parseInt(opcao.attr("data-id"))
         });
         
-        // Vai para a próxima questão ou para o final
         questaoAtual++;
-        atualizar();
+        //atualizar();
+        exibirNoticia();
+    }
+
+    function exibirNoticia() {
+        html += '<p>-Notícia aqui-</p>';
+        html += '<p><button id="botao-proximo" type="button" onclick="atualizar()" class="btn btn-default" disabled="disabled">Próxima</button></p>';
+        setTimeout(habilitarBotao, 3000);
     }
     
     function exibirEspera() {
