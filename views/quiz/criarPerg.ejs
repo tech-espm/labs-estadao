@@ -1,0 +1,81 @@
+<div class="row">
+	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+		<form id="form-quiz" class="panel panel-default" action="#" >
+            <div class="panel-heading">Informações da Pergunta 1</div> 
+            <!-- TODO incremenar "Informacao da Pergunta [i]" -->
+
+			<div class="panel-body no-bottom">
+
+                    <div class= "form-group"> 
+                        <label for="titulo">Titulo :</label>
+                            <div class="form-inline">
+                                <input type="text" placeholder="Titulo da Pergunta" id="questao" class="form-control" style="width: 55vh;"/>
+                                <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
+                            </div>
+                    </div>  
+
+                    <div class= "form-group "> 
+                        <label for="desc">Descricao :</label>      
+                        <div class="form-inline">                          
+                            <textarea id="desc" rows="3" name="desc" placeholder="Descricao da Pergunta" class="form-control " style="width: 55vh;"></textarea>
+                            <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button> 
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class= "form-group col-md-6"> 
+                            <label for="titulo">Alternativa 1 :</label>
+                            <div class="form-inline">
+                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa1" VALUE="alternativa1" > 
+                                <input type="text"  id="alternativa1" class=" form-control " /> 
+                                <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
+                            </div>
+                        </div> 
+                        <div class= "form-group col-md-6"> 
+                            <label for="titulo">Alternativa 3 :</label>
+                            <div class="form-inline">
+                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa3" VALUE="alternativa3"> 
+                                <input type="text"  id="alternativa3" class="form-control"/>
+                                <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
+                            </div> 
+                        </div> 
+                    </div>
+                   
+                    <div class="form-group">
+                        <div class= "form-group col-md-6"> 
+                            <label for="titulo">Alternativa 2 :</label>
+                            <div class="form-inline">
+                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa2" VALUE="alternativa2" > 
+                                <input type="text"  id="alternativa2" class="form-control"/> 
+                                <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
+                            </div>
+                        </div> 
+                        <div class= "form-group col-md-6"> 
+                            <label for="titulo">Alternativa 4 :</label>
+                            <div class="form-inline">
+                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa4" VALUE="alternativa4"> 
+                                <input type="text"  id="alternativa4" class="form-control"/>
+                                <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
+                            </div>
+                               
+                        </div> 
+
+                    </div>
+                    
+                    <div class="form-row ">
+                        <div class="col form-group col-md-8">
+                            <button name="clear" class="btn btn-danger" >Finalizar</button>
+                        </div>
+
+                        <div class="col form-group col-md-4">
+                            <button name="criarQuestao" class="btn btn-success" type="submit">Criar Questão</button>
+                        </div>
+                        
+                        
+                    </div>  
+                        
+                </div> 
+                
+        </form>    
+    </div>
+</div>

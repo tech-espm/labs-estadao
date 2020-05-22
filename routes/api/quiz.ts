@@ -23,13 +23,24 @@
 
 // ROTAS
     // Salvar Quiz
-    router.post('/salvar', multer().single("image"), wrap(async (req:express.Request, res: express.Response) => {
+    router.post('/salvar', multer().single("imagem"), wrap(async (req:express.Request, res: express.Response) => {
+        let q = req.body as Quiz;
+
+        if(q){
+            q.nome = req.body.titulo
+            q.desc = req.body.desc
+            q.img = parseInt(req.body.versao)
+            q.tipo_id = parseInt(req.body.tipo)
+
+            // q.img = parseInt(req.body.versao)
+            
+        }
         
-        console.log(req.body)
-        
-        
+        console.log(q)
+        jsonRes(res, 400, q && req["imagem"] ? await Quiz.createQuiz(q, req["imagem"]) : "Dados inválidos");
+
         // jsonRes(res, 400, "OK")
-        return res.send(req.body)
+        // Send the quiz ID
         // if(q){
         //     // Usar a funcao saveQuiz() 
         //     // res.json(q.id);
@@ -38,7 +49,7 @@
         // res.status(400);
         /*
         $.ajax({
-            ...https://matematicabasica.net/wp-content/uploads/2019/02/triangulo-de-pascal-11-1.png
+            ...
             success: function(data) {
                 location.href = "/quiz/editar?id=" + data;
             }

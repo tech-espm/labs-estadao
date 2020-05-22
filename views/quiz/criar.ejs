@@ -5,7 +5,7 @@
 			<div class="panel-body no-bottom">
 
                 <div class="form-group">
-                    <input type="file" id="filepond" name="image" data-max-file-size="5MB" accept="image/png, image/jpeg, image/gif" >
+                    <!-- <input type="file" id="imagem" name="imagem" data-max-file-size="5MB" accept="image/png, image/jpeg, image/gif" > -->
                 </div>
 
                 <div class="form-group">
@@ -32,9 +32,9 @@
                 </div>
             </div>
 
-            <div class="panel-footer text-center">
+            <div class="panel-footer text-center ">
                 <button name="clear" class="btn btn-default btn-outline" type="reset">Limpar</button>
-                <button name="create" class="btn btn-primary" type="submit">Criar</button>
+                <button name="create" class="btn btn-success" type="submit">Criar</button>
                 <!--<input value="Salvar Alterações" class="btn btn-primary btn-lg btn-block" type="submit" />-->
             </div>
         </form>
@@ -55,52 +55,90 @@
 <script type="text/javascript">
     "use strict";
 
-    //FilePond Config
-    FilePond.registerPlugin(
-        FilePondPluginImagePreview,
-        FilePondPluginFileValidateSize,
-        FilePondPluginFileValidateType,
-    );
+    // //FilePond Config
+    // FilePond.registerPlugin(
+    //     FilePondPluginImagePreview,
+    //     FilePondPluginFileValidateSize,
+    //     FilePondPluginFileValidateType,
+    // );
 
-    const inputImg = document.getElementById("filepond");
-    const pond = FilePond.create(inputImg, {
-        labelIdle: `Arraste & Solte sua imagem ou <span class="filepond--label-action">Selecione um Aquivo</span>`,
-        labelMaxFileSizeExceeded: "Tamanho do arquivo excedeu o limite",
-        labelFileTypeNotAllowed: "Tipo do arquivo não permitido"
-    });
-
-    // Submiting data to /api/quiz/salvar to save the quiz
-    $("#form-quiz").submit(function(e){
-        e.preventDefault();
-    
-        postform()
-    })
+    // const inputImg = document.getElementById("imagem");
+    // const pond = FilePond.create(inputImg, {
+    //     labelIdle: `Arraste & Solte sua imagem ou <span class="filepond--label-action">Selecione um Aquivo</span>`,
+    //     labelMaxFileSizeExceeded: "Tamanho do arquivo excedeu o limite",
+    //     labelFileTypeNotAllowed: "Tipo do arquivo não permitido"
+    // });
 
 
-    function postform(){
 
-        //Prepare data
-        let formdata = {
-            titulo: $("#titulo").val(),
-            desc: $("#desc").val(),
-            img: $("#filepond").val(),
-            tipo: $("#tipo").val()
-        }
+    // $("#form-quiz").submit(function (e) {
+    //     e.preventDefault();
         
-        $.ajax({
-            type: 'POST',
-            url: '/api/quiz/salvar',
-            contentType: "application/json",
-            data: JSON.stringify(formdata), 
-            dataType: "json",
-            
-        }).done((res) => {
-            Notification.success("Quiz criado com sucesso" + emoji.happy);
-        }).fail(() => {
-            Notification.error("Erro interno, Status : 400 " + emoji.sad);
-        })
-    
-    }
+    //     let titulo = document.getElementById("titulo").value;
+    //     let desc = document.getElementById("desc").value;
+    //     let file = document.getElementById("imagem").files;
+    //     let tipo = document.getElementById("tipo").value;
+    //     let img = 1;
+
+    //     var formData = new FormData();
+
+    //     formData.append("titulo", titulo)
+    //     formData.append("desc", desc)
+    //     formData.append("imagem", file)
+    //     formData.append("tipo", tipo)
+    //     formData.append("versao" , img)
+
+
+    //     console.log(formData)
+    //     $.ajax({
+    //         type: "POST",
+    //         enctype:'multipart/form-data',
+    //         url: '/api/quiz/salvar',
+    //         data: formData,
+    //         processData: false,
+    //         contentType: false,
+    //         success: function(r){
+    //             console.log("result",r)
+    //         },
+    //         error: function (e) {
+    //             console.log("some error", e);
+    //         }
+    //     });
+
+// });
+
+$("#form-quiz").validate({
+		rules: {
+			titulo: {
+				required: true,
+				
+			},
+			desc: {
+				required: true,
+			},
+			tipo: {
+				required: true
+			}
+		},
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+				return;
+
+			Notification.wait();
+
+			JsonWebApi.postFormData("/api/quiz/salvar", form, function (response) {
+				if (response.success) {
+					resetForm("#form");
+					Notification.success("OK " + emoji.happy);
+				} else {
+					Notification.error(response.value, true);
+				}
+			});
+		}
+	});
+
+
     
         
     
