@@ -27,7 +27,7 @@ INSERT INTO usuario (login, nome, idperfil, senha, token) VALUES ('ADMIN', 'ADMI
 
 -- Tabela Tipos de quiz 
 CREATE TABLE tipo (
-	tipo_id INT NOT NULL AUTO_INCREMENT,
+	tipo_id INT NOT NULL,
 	tipo_nome VARCHAR(50) NOT NULL,
 	tipo_desc VARCHAR(250) NOT NULL,
 	-- PK, FK & UK
@@ -35,13 +35,18 @@ CREATE TABLE tipo (
 	UNIQUE KEY tipo_nome_UN (tipo_nome)
 );
 
+INSERT INTO tipo (tipo_id, tipo_nome, tipo_desc) VALUES
+(1, 'Pontuação', 'O resultado do quiz depende da quantidade de perguntas respondidas corretamente');
+-- (2, 'Perfil', 'O resultado do quiz depende das respostas dadas às perguntas');
+
 -- Tabela Quiz 
 CREATE TABLE quiz (
 	quiz_id INT NOT NULL AUTO_INCREMENT,
 	quiz_nome VARCHAR(100) NOT NULL,
+	quiz_desc VARCHAR(500) NOT NULL,
 	quiz_img INT NOT NULL,
 	quiz_data_cria TIMESTAMP NOT NULL DEFAULT NOW(),
-	quiz_data_mod TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE now(),
+	quiz_data_mod TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW(),
 	id_tipo INT NOT NULL,
 	-- PK, FK & UK
 	PRIMARY KEY (quiz_id),
