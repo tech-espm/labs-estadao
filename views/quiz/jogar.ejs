@@ -4,7 +4,7 @@
         <div id="secao" class="text-center">
             <h1>Quiz do Estadão</h1>
             <p>Descrição...</p>
-            <button name="start" class="btn btn-primary" onclick="iniciar()" type="button">Iniciar</button>
+            <button name="start" class="btn btn-primary" onclick="atualizar()" type="button">Iniciar</button>
         </div>
     </div>
 </div>
@@ -28,210 +28,255 @@
 
 <%- contentFor("scripts") %>
 <script type="text/javascript">
+    "use strict";
     var secao = $("#secao");
     var carregando = false;
-    var questoes = [
-        {
-            "id": 100,
-            "titulo": "Uma Pergunta",
-            "alternativas": [
-                {
-                    "id": 101,
-                    "texto": "a - Texto 1",
-                    "correta": false
-                },
-                {
-                    "id": 102,
-                    "texto": "b - Texto 2",
-                    "correta": false
-                },
-                {
-                    "id": 103,
-                    "texto": "c - Texto 3",
-                    "correta": false
-                },
-                {
-                    "id": 104,
-                    "texto": "d - Texto 4 (eu sou a correta)",
-                    "correta": true
-                }
-            ]
-        },
-        {
-            "id": 200,
-            "titulo": "Outra Pergunta",
-            "alternativas": [
-                {
-                    "id": 201,
-                    "texto": "a - Texto 1",
-                    "correta": false
-                },
-                {
-                    "id": 202,
-                    "texto": "b - Texto 2 (eu sou a correta)",
-                    "correta": true
-                },
-                {
-                    "id": 203,
-                    "texto": "c - Texto 3",
-                    "correta": false
-                },
-                {
-                    "id": 204,
-                    "texto": "d - Texto 4",
-                    "correta": false
-                }
-            ]
-        },
-        {
-            "id": 300,
-            "titulo": "Mais Uma Pergunta",
-            "alternativas": [
-                {
-                    "id": 301,
-                    "texto": "a - Texto 1",
-                    "correta": false
-                },
-                {
-                    "id": 302,
-                    "texto": "b - Texto 2",
-                    "correta": false
-                },
-                {
-                    "id": 303,
-                    "texto": "c - Texto 3 (eu sou a correta)",
-                    "correta": true
-                },
-                {
-                    "id": 304,
-                    "texto": "d - Texto 4",
-                    "correta": false
-                }
-            ]
-        },
-        {
-            "id": 400,
-            "titulo": "Pergunta Final",
-            "alternativas": [
-                {
-                    "id": 401,
-                    "texto": "a - Texto 1 (eu sou a correta)",
-                    "correta": true
-                },
-                {
-                    "id": 402,
-                    "texto": "b - Texto 2",
-                    "correta": false
-                },
-                {
-                    "id": 403,
-                    "texto": "c - Texto 3",
-                    "correta": false
-                },
-                {
-                    "id": 404,
-                    "texto": "d - Texto 4",
-                    "correta": false
-                }
-            ]
-        }
-    ];
-    var questaoAtual = 0;
+    var quiz = {
+        "quiz_id": 1,
+        "quiz_nome": "Quiz Teste",
+        "id_tipo": 1,
+        "perguntas": [
+            {
+                "perg_id": 100,
+                "perg_titulo": "Uma Pergunta",
+                "perg_texto": "Blah blah",
+                "perg_img": 1,
+                "perg_pontuacao": 10,
+                "perg_resp_texo": "Notícia",
+                "perg_resp_img": 1,
+                "alternativas": [
+                    {
+                        "alt_id": 101,
+                        "alt_texto": "a - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 102,
+                        "alt_texto": "b - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 103,
+                        "alt_texto": "c - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 104,
+                        "alt_texto": "d - Texto 1 XXX",
+                        "alt_img": 1,
+                        "alt_correta": 1
+                    },
+                ]
+            },
+            {
+                "perg_id": 200,
+                "perg_titulo": "Uma Pergunta 2",
+                "perg_texto": "Blah blah 2",
+                "perg_img": 1,
+                "perg_pontuacao": 10,
+                "perg_resp_texo": "Notícia 2",
+                "perg_resp_img": 1,
+                "alternativas": [
+                    {
+                        "alt_id": 201,
+                        "alt_texto": "a - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 202,
+                        "alt_texto": "b - Texto 1 XXX",
+                        "alt_img": 1,
+                        "alt_correta": 1
+                    },
+                    {
+                        "alt_id": 203,
+                        "alt_texto": "c - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 204,
+                        "alt_texto": "d - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                ]
+            },
+            {
+                "perg_id": 300,
+                "perg_titulo": "Uma Pergunta 3",
+                "perg_texto": "Blah blah 3",
+                "perg_img": 1,
+                "perg_pontuacao": 10,
+                "perg_resp_texo": "Notícia 3",
+                "perg_resp_img": 1,
+                "alternativas": [
+                    {
+                        "alt_id": 301,
+                        "alt_texto": "a - Texto 1 XXX",
+                        "alt_img": 1,
+                        "alt_correta": 1
+                    },
+                    {
+                        "alt_id": 302,
+                        "alt_texto": "b - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 303,
+                        "alt_texto": "c - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 304,
+                        "alt_texto": "d - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                ]
+            },
+            {
+                "perg_id": 400,
+                "perg_titulo": "Uma Pergunta 4",
+                "perg_texto": "Blah blah 4",
+                "perg_img": 1,
+                "perg_pontuacao": 10,
+                "perg_resp_texo": "Notícia 4",
+                "perg_resp_img": 1,
+                "alternativas": [
+                    {
+                        "alt_id": 401,
+                        "alt_texto": "a - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 402,
+                        "alt_texto": "b - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                    {
+                        "alt_id": 403,
+                        "alt_texto": "c - Texto 1 XXX",
+                        "alt_img": 1,
+                        "alt_correta": 1
+                    },
+                    {
+                        "alt_id": 404,
+                        "alt_texto": "d - Texto 1",
+                        "alt_img": 1,
+                        "alt_correta": 0
+                    },
+                ]
+            },
+        ]
+    };
+    var respondido = false;
+    var perguntaAtual = 0;
     var acertos = 0;
+    var pontuacao = 0;
     var respostas = [];
     
     function atualizar() {
         if (carregando)
             return;
         
+        respondido = false;
         carregando = true;
         
-        if (questaoAtual < questoes.length) {
-            secao.fadeOut(400, "swing", exibirProximaQuestao);
+        if (perguntaAtual < quiz.perguntas.length) {
+            secao.fadeOut(400, "swing", exibirProximaPergunta);
         } else {
             secao.fadeOut(400, "swing", exibirEspera);
         }
     }
 
-    function iniciar() {
-        secao.fadeOut(400, "swing", atualizar);
-    }
-
-    function exibirProximaQuestao() {
-        var questao = questoes[questaoAtual];
-        var escolha = null;
+    function exibirProximaPergunta() {
+        var pergunta = quiz.perguntas[perguntaAtual];
         
-        var html = '<h2>' + questao.titulo + '</h2>';
+        var html = '<h2>' + pergunta.perg_titulo + '</h2>';
         
-        for (var i = 0; i < questao.alternativas.length; i++) {
-            
+        for (var i = 0; i < pergunta.alternativas.length; i++) {
             html +=
-                '<button type="button" name="pergunta" class="btn btn-default btn-outline" onclick="escolha" data-id="' +
-                questao.alternativas[i].id +
-                '" value="' +
-                (questao.alternativas[i].correta ? '1' : '0') +
-                '" > ' +
-                questao.alternativas[i].texto +
+                '<button ' +
+                (pergunta.alternativas[i].alt_correta ? 'id="botao-correto"' : '') +
+                ' type="button" class="btn btn-default btn-outline" onclick="responder(this, ' +
+                pergunta.alternativas[i].alt_correta +
+                ',' +
+                pergunta.alternativas[i].alt_id +
+                ')" > ' +
+                pergunta.alternativas[i].alt_texto +
                 '</button>' +
                 '</p>';
         }
         
-        if (escolha >= 0) {
-            responder();
-        }
-        //html += '<p><button id="botao-proximo" type="button" onclick="responder()" class="btn btn-default" disabled="disabled">Próxima</button></p>';
-        
+        html += '<div id="noticia" class="noticia" style="display: none;">' +
+            '<hr />' +
+            '<img class="noticia-imagem" src="<%- root %>/uploads/quiz/' + quiz.quiz_id + '/perguntas/resp' + pergunta.perg_id + '.jpg?v=' + pergunta.perg_resp_img + '" />' +
+            '<div class="noticia-texto">' +
+            pergunta.perg_resp_texo +
+            '</div>'+
+            '<hr />' +
+            '<div class="noticia-aguarde" id="noticia-aguarde"><img src="<%- root %>/imagens/loading-white.gif" /></div>' +
+            '<div class="noticia-botao" id="noticia-botao" style="display: none;"><button type="button" onclick="atualizar()" class="btn btn-primary">Próxima</button></div>';
+            '</div>';
+
         secao.html(html);
-        
+
         secao.fadeIn(400, "swing", function () {
             // Apenas para liberar o clique do botão!
             carregando = false;
         });
     }
 
-    function habilitarBotao() {
-        // Só habilita o botão quando selecionar alguma alternativa
-        $("#botao-proximo").prop("disabled", false);
-    }
-    
-    function responder() {
+    function responder(botao, correta, alt_id) {
         // Vamos utilizar a variável carregando para prevenir
         // "dedos rápidos", que clicam em botões sem a animação
         // ter acabado!
-        if (carregando)
+        if (respondido || carregando)
             return;
-        
-        // Descobre se o usuário acertou
-        //var opcao = $("#secao button:checked");
-        
+
+        respondido = true;
+
         //if (opcao.val() == "1") {
-        if (escolha === "1") {
-                //O button correto deve ficar verde
-                //$("").prop("class", "btn btn-success");
-                acertos++;
-        } /*else {
-                //O button clicado deve ficar vermelho
-                $("").prop("class", "btn btn-danger");
-                //O button correto deve ficar verde
-                $("").prop("class", "btn btn-success");
-        } */
-        
+        if (correta) {
+            acertos++;
+            pontuacao += quiz.perguntas[perguntaAtual].perg_pontuacao;
+        } else {
+            botao.className = "btn btn-danger";
+        }
+        document.getElementById("botao-correto").className = "btn btn-success";
+
         // Armazena um objeto com o id da questão e da
         // resposta para enviar para o servidor ao final
         respostas.push({
-            idQuestao: questoes[questaoAtual].id,
-            idResposta: parseInt(opcao.attr("data-id"))
+            perg_id: quiz.perguntas[perguntaAtual].perg_id,
+            alt_id: alt_id
         });
-        
-        questaoAtual++;
-        //atualizar();
+
+        perguntaAtual++;
+
         exibirNoticia();
     }
 
     function exibirNoticia() {
-        html += '<p>-Notícia aqui-</p>';
-        html += '<p><button id="botao-proximo" type="button" onclick="atualizar()" class="btn btn-default" disabled="disabled">Próxima</button></p>';
-        setTimeout(habilitarBotao, 3000);
+        $("#noticia").fadeIn(400, "swing");
+        setTimeout(ocultarAguarde, 3000);
+    }
+
+    function ocultarAguarde() {
+        $("#noticia-aguarde").fadeOut(400, "swing", exibirBotao);
+    }
+
+    function exibirBotao() {
+        $("#noticia-botao").fadeIn(400, "swing");
     }
     
     function exibirEspera() {
@@ -268,7 +313,7 @@
     }
     
     function exibirTotais() {
-        var perc = Math.round(100 * acertos / questoes.length);
+        var perc = Math.round(100 * acertos / quiz.perguntas.length);
         
         // Vamos construir o html aqui. Existem outras alternativas...
         var html = '<h2>';
@@ -301,8 +346,9 @@
         if (carregando)
             return;
         
-        questaoAtual = 0;
+        perguntaAtual = 0;
         acertos = 0;
+        pontuacao = 0;
         respostas = [];
         atualizar();
     }
