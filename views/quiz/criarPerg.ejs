@@ -1,41 +1,39 @@
 <div class="row">
 	<div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-		<form id="form-quiz" class="panel panel-default" action="#" >
+		<form id="form-perg" class="panel panel-default" action="#" enctype="multipart/form-data">
             <div class="panel-heading">Informações da Pergunta 1</div> 
             <!-- TODO incremenar "Informacao da Pergunta [i]" -->
 
 			<div class="panel-body no-bottom">
 
+                    <div class="form-group">
+                        <input type="file" id="imagem" name="imagem" style="display: none;" />
+                    </div>
+
                     <div class= "form-group"> 
                         <label for="titulo">Titulo :</label>
-                            <div class="form-inline">
-                                <input type="text" placeholder="Titulo da Pergunta" id="questao" class="form-control" style="width: 55vh;"/>
-                                <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
-                            </div>
+                        <input type="text" placeholder="Titulo da Pergunta" id="titulo" name="titulo" class="form-control"/>   
                     </div>  
 
                     <div class= "form-group "> 
-                        <label for="desc">Descricao :</label>      
-                        <div class="form-inline">                          
-                            <textarea id="desc" rows="3" name="desc" placeholder="Descricao da Pergunta" class="form-control " style="width: 55vh;"></textarea>
-                            <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button> 
-                        </div>
+                        <label for="desc">Descricao :</label>                           
+                        <textarea id="desc" rows="3" name="desc" placeholder="Descricao da Pergunta" class="form-control "  style="resize: vertical;"></textarea>
                     </div>
 
                     <div class="form-row">
                         <div class= "form-group col-md-6"> 
                             <label for="titulo">Alternativa 1 :</label>
                             <div class="form-inline">
-                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa1" VALUE="alternativa1" > 
-                                <input type="text"  id="alternativa1" class=" form-control " /> 
+                                <input type="radio" name="opcao" id= "radioAlternativa1" value="1" > 
+                                <input type="text"  id="alternativa1" name="alternativa1" class=" form-control " /> 
                                 <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
                             </div>
                         </div> 
                         <div class= "form-group col-md-6"> 
                             <label for="titulo">Alternativa 3 :</label>
                             <div class="form-inline">
-                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa3" VALUE="alternativa3"> 
-                                <input type="text"  id="alternativa3" class="form-control"/>
+                                <input type="radio" name="opcao" id= "radioAlternativa3" value="3"> 
+                                <input type="text"  id="alternativa3" name="alternativa3" class="form-control"/>
                                 <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
                             </div> 
                         </div> 
@@ -45,30 +43,32 @@
                         <div class= "form-group col-md-6"> 
                             <label for="titulo">Alternativa 2 :</label>
                             <div class="form-inline">
-                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa2" VALUE="alternativa2" > 
-                                <input type="text"  id="alternativa2" class="form-control"/> 
+                                <input type="radio" name="opcao" id= "radioAlternativa2" value="2" > 
+                                <input type="text"  id="alternativa2" name="alternativa2" class="form-control"/> 
                                 <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
                             </div>
                         </div> 
                         <div class= "form-group col-md-6"> 
                             <label for="titulo">Alternativa 4 :</label>
                             <div class="form-inline">
-                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa4" VALUE="alternativa4"> 
-                                <input type="text"  id="alternativa4" class="form-control"/>
+                                <input type="radio" name="opcao" id= "radioAlternativa4" value="4"> 
+                                <input type="text"  id="alternativa4" name="alternativa4" class="form-control"/>
                                 <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
                             </div>
                                
                         </div> 
 
                     </div>
+
+                    <input type="hidden" id="quiz-id" > <%=quiz_id%> </input>
                     
                     <div class="form-row ">
                         <div class="col form-group col-md-8">
-                            <button name="clear" class="btn btn-danger" >Finalizar</button>
+                            <button id="clear" class="btn btn-danger" >Finalizar</button>
                         </div>
 
                         <div class="col form-group col-md-4">
-                            <button name="criarQuestao" class="btn btn-success" type="submit">Criar Questão</button>
+                            <button id="criarQuestao" class="btn btn-success" type="submit">Criar Questão</button>
                         </div>
                         
                         
@@ -79,3 +79,75 @@
         </form>    
     </div>
 </div>
+
+
+<%- contentFor("styles") %>
+<style type="text/css">
+	.filepond--root {
+		font-size: 1.5rem;
+	}
+</style>
+
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+    "use strict";
+    
+    prepareFilePond("imagem", true);
+    
+    
+	$("#form-perg").validate({
+		rules: {
+			titulo: {
+				required: true
+			},
+			desc: {
+				required: false
+			},
+        },
+        
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+                return;
+                
+            let formData = new FormData(form);
+            // let quiz_id = $("#quiz-id").val()
+            // formData.append("qid", quiz_id);
+            // console.log(quiz_id)
+            addFilePondToFormData("imagem", formData);
+
+            Notification.wait();
+            
+			JsonWebApi.postFormData("/api/quiz/salvarpergunta", formData, function (response) {
+				if (response.success) {
+					// resetForm("#form-perg");
+					Notification.success("Pergunta criada com sucesso " + emoji.happy);
+				} else {
+					Notification.error(response.value, true);
+				}
+			});
+		}
+	});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-// IMPORTS
+// IMPORTS 
     // Express
     import express = require('express');
 
@@ -25,7 +25,7 @@ export = class Pergunta {
     public titulo: string; // form
     public texto: string; // form
     public img: number; // form
-    public quiz_id: number; // LAST_INSERT_ID() , How ?????
+    public quiz_id: number; 
     public pontuacao: number;  // form or default 1 ?
     public resp_texto: string; // Form
     public resp_img: number; // Form
@@ -50,7 +50,7 @@ export = class Pergunta {
                 p.id = await sql.scalar('SELECT LAST_INSERT_ID()') as number;
 
                 // File Upload
-                await Upload.gravarArquivo(arquivo, Quiz.caminhoRelativoPasta(p.quiz_id), Pergunta.nomeArquivoImagem(p.id) ) // Imagen da Pergunta
+                await Upload.gravarArquivo(arquivo, Quiz.caminhoRelativoPasta(p.quiz_id), Pergunta.nomeArquivoImagem(p.id) ) // Imagem da Pergunta
                 //await Upload.gravarArquivo(a_images, Pergunta.caminhoRelativoPasta(p.id), Alternativa + "." + Pergunta.extensaoImagem ) // Salvar as imagens das alternativas
 
                 //* Salvando as alternativas 
