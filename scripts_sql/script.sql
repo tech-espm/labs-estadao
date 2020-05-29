@@ -62,13 +62,13 @@ CREATE TABLE pergunta (
 	perg_texto VARCHAR(500) NOT NULL,
 	perg_img INT NOT NULL,
 	perg_pontuacao INT NOT NULL,
-	perg_resp_texo VARCHAR(500) NOT NULL,
+	perg_resp_texto VARCHAR(500) NOT NULL,
 	perg_resp_img INT NOT NULL,
-	id_quiz INT NOT NULL,
+	quiz_id INT NOT NULL,
 	-- PK, FK & UK
 	PRIMARY KEY (perg_id),
-	KEY id_quiz_FK_idx (id_quiz),
-	CONSTRAINT id_quiz_FK FOREIGN KEY (id_quiz) REFERENCES quiz (quiz_id)
+	KEY quiz_id_FK_idx (quiz_id),
+	CONSTRAINT quiz_id_FK FOREIGN KEY (quiz_id) REFERENCES quiz (quiz_id)
 );
 
 -- Tabela Alternativas
@@ -77,9 +77,9 @@ CREATE TABLE alternativa (
 	alt_texto VARCHAR(500) NOT NULL,
 	alt_img INT NOT NULL,
 	alt_correta BOOLEAN,
-	id_perg INT NOT NULL,
+	perg_id INT NOT NULL,
 	-- PK, FK & UK
 	PRIMARY KEY (alt_id),
-	KEY id_perg_FK_idx (id_perg),
-	CONSTRAINT id_perg_FK FOREIGN KEY (id_perg) REFERENCES pergunta (perg_id)
+	KEY perg_id_FK_idx (perg_id),
+	CONSTRAINT perg_id_FK FOREIGN KEY (perg_id) REFERENCES pergunta (perg_id)
 );

@@ -1,0 +1,294 @@
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <form id="form-perg" class="panel panel-default" action="#" enctype="multipart/form-data">
+			<div class="panel-heading">Informações da Pergunta</div>
+
+            <input type="hidden" id="quiz_id" name="quiz_id" value="<%= quiz_id %>" />
+
+            <input type="hidden" id="perg_id" name="perg_id" value="<%= (pergunta ? pergunta.perg_id : 0) %>" />
+
+			<div class="panel-body no-bottom">
+				<div class="form-group">
+					<label for="imagem">Imagem da Pergunta</label>
+					<input type="file" id="imagem" name="imagem" style="display: none;" />
+				</div>
+
+				<% if (pergunta) { %>
+				<div class="form-group">
+					<label>Imagem da Pergunta (atual)</label>
+					<img class="imagem" id="imagematual" src="<%- (pergunta.perg_img ? (root + "/uploads/quiz/" + quiz_id + "/" + pergunta.perg_id + "/p" + pergunta.perg_id + ".jpg?" + pergunta.perg_img) : (root + "/imagens/placeholder.png")) %>" />
+				</div>
+				<% } %>
+
+				<div class="form-group">
+					<label for="perg_titulo">Título</label>
+					<input type="text" placeholder="Título da pergunta" id="perg_titulo" name="perg_titulo" class="form-control" value="<%= (pergunta ? pergunta.perg_titulo : "") %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="perg_texto">Descrição</label>
+					<textarea id="perg_texto" rows="3" name="perg_texto" placeholder="Descrição da pergunta" class="form-control" style="resize: vertical;"><%= (pergunta ? pergunta.perg_texto : "") %></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="perg_pontuacao">Pontuação</label>
+					<input type="number" placeholder="Valor da pergunta" id="perg_pontuacao" name="perg_pontuacao" class="form-control" value="<%= (pergunta ? pergunta.perg_pontuacao : 0) %>" />
+				</div>
+
+				<div class="form-group">
+					<label for="perg_resp_texto">Explicação da Resposta</label>
+					<textarea id="perg_resp_texto" rows="3" name="perg_resp_texto" placeholder="Texto a ser exibido depois de respondida a pergunta" class="form-control" style="resize: vertical;"><%= (pergunta ? pergunta.perg_resp_texto : "") %></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="imagemresposta">Imagem da Resposta</label>
+					<input type="file" id="imagemresposta" name="imagemresposta" style="display: none;" />
+				</div>
+
+				<% if (pergunta) { %>
+				<div class="form-group">
+					<label>Imagem da Resposta (atual)</label>
+					<img class="imagem" id="imagemrespostaatual" src="<%- (pergunta.perg_resp_img ? (root + "/uploads/quiz/" + quiz_id + "/" + pergunta.perg_id + "/r" + pergunta.perg_id + ".jpg?" + pergunta.perg_resp_img) : (root + "/imagens/placeholder.png")) %>" />
+				</div>
+				<% } %>
+
+				<hr />
+
+				<button type="button" onclick="adicionarAlternativa()">Nova alternativa</button>
+
+				<div id="alternativas">
+
+					<% if (pergunta && pergunta.alternativas) { for (let i = 0; i < pergunta.alternativas.length; i++) { let alternativa = pergunta.alternativas[i]; %>
+					<div class="form-group" id="alternativa<%= i %>">
+						<hr />
+						<button onclick="removerAlternativa('<%= i %>')">Remover</button>
+						<label for="alt_correta<%= i %>">Alternativa</label>
+						<input type="hidden" id="alt_id<%= i %>" value="<%= alternativa.alt_id %>" />
+						<input type="radio" id="alt_correta<%= i %>" name="alt_correta" value="1" <%= (alternativa.alt_correta ? 'checked="checked"' : '') %> />
+						<textarea id="alt_texto<%= i %>" rows="3" name="alt_texto" placeholder="Texto da alternativa" class="form-control" style="resize: vertical;"><%= alternativa.alt_texto %></textarea>
+						<input type="file" id="imagemalternativa<%= i %>" name="imagemalternativa<%= i %>" style="display: none;" />
+						<label>Imagem da Alternativa (atual)</label>
+						<img class="imagem" id="imagemalternativa<%= i %>atual" src="<%- (alternativa.alt_img ? (root + "/uploads/quiz/" + quiz_id + "/" + pergunta.perg_id + "/a" + alternativa.alt_id + ".jpg?" + alternativa.alt_img) : (root + "/imagens/placeholder.png")) %>" />
+					</div>
+					<% } } %>
+
+				</div>
+
+				<div class="form-row">
+					<div class="col form-group col-md-8">
+						<button id="clear" class="btn btn-danger">Finalizar</button>
+					</div>
+
+					<div class="col form-group col-md-4">
+						<button id="criarQuestao" class="btn btn-success" type="submit"><%- (pergunta ? "Salvar Pergunta" : "Criar Pergunta") %></button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<%- contentFor("styles") %>
+<style type="text/css">
+	.imagem {
+		display: block;
+		margin: 0px auto;
+		max-width: 100%;
+		max-height: 100px;
+		border-radius: 4px;
+		border: 1px solid #ddd;
+		box-shadow: 0 1px 0 #e5e5e5;
+	}
+	.filepond--root {
+		font-size: 1.5rem;
+	}
+</style>
+
+<%- contentFor("scripts") %>
+<script type="text/javascript">
+	"use strict";
+
+	// Funcao para mostrar o formulario de resposta - Melhorar !!!!
+
+	prepareFilePond("imagem", true);
+	prepareFilePond("imagemresposta", true);
+
+	var proximaAlternativa = 0;
+
+	//<% if (pergunta && pergunta.alternativas) { %>
+	proximaAlternativa = parseInt("<%= pergunta.alternativas.length %>");
+	//<% for (let i = 0; i < pergunta.alternativas.length; i++) { %>
+	prepareFilePond("imagemalternativa<%= i %>", true);
+	//<% } } %>
+
+	function adicionarAlternativa() {
+		if (JsonWebApi.active)
+				return;
+
+		$("#alternativas").append(`<div class="form-group" id="alternativa${proximaAlternativa}">
+			<hr />
+			<button onclick="removerAlternativa('${proximaAlternativa}')">Remover</button>
+			<label for="alt_correta${proximaAlternativa}">Alternativa</label>
+			<input type="hidden" id="alt_id${proximaAlternativa}" value="0" />
+			<input type="radio" id="alt_correta${proximaAlternativa}" name="alt_correta" value="1" />
+			<textarea id="alt_texto${proximaAlternativa}" rows="3" name="alt_texto" placeholder="Texto da alternativa" class="form-control" style="resize: vertical;"></textarea>
+			<input type="file" id="imagemalternativa${proximaAlternativa}" name="imagemalternativa${proximaAlternativa}" style="display: none;" />
+			<% if (pergunta) { %>
+			<label>Imagem da Alternativa (atual)</label>
+			<img class="imagem" id="imagemalternativa${proximaAlternativa}atual" src="<%- root %>/imagens/placeholder.png" />
+			<% } %>
+		</div>`);
+		prepareFilePond("imagemalternativa" + proximaAlternativa, true);
+		proximaAlternativa++;
+	}
+
+	function removerAlternativa(indice) {
+		if (JsonWebApi.active)
+				return;
+
+		$("#alternativa" + indice).remove();
+	}
+
+	function uploadImagem(quiz_id, perg_id, imagens, i, callback) {
+		if (i >= imagens.length) {
+			callback(null);
+			return;
+		}
+
+		var formData = new FormData();
+
+		if (!addFilePondToFormData(imagens[i].id, formData, "imagem")) {
+			uploadImagem(quiz_id, perg_id, imagens, i + 1, callback);
+			return;
+		}
+
+		JsonWebApi.postFormData("/api/quiz/uploadimagem?quiz_id=" + quiz_id + "&perg_id=" + perg_id + "&alt_id=" + imagens[i].alt_id + "&tipo=" + imagens[i].tipo, formData, function (response) {
+			if (response.success) {
+				resetFilePond(imagens[i].id);
+				//<% if (pergunta) { %>
+				var img = document.getElementById(imagens[i].id + "atual");
+				switch (imagens[i].tipo) {
+					case "p":
+						img.setAttribute("src", "<%- root %>/uploads/quiz/<%- quiz_id %>/<%- pergunta.perg_id %>/p<%- pergunta.perg_id %>.jpg?" + response.value);
+						break;
+					case "r":
+						img.setAttribute("src", "<%- root %>/uploads/quiz/<%- quiz_id %>/<%- pergunta.perg_id %>/r<%- pergunta.perg_id %>.jpg?" + response.value);
+						break;
+					case "a":
+						img.setAttribute("src", "<%- root %>/uploads/quiz/<%- quiz_id %>/<%- pergunta.perg_id %>/a" + imagens[i].alt_id + ".jpg?" + response.value);
+						break;
+				}
+				//<% } %>
+				uploadImagem(quiz_id, perg_id, imagens, i + 1, callback);
+			} else {
+				callback(response.value);
+			}
+		});
+	}
+
+	function uploadImagens(quiz_id, perg_id, callback) {
+		var imagens = [{ id: "imagem", alt_id: 0, tipo: "p" }, { id: "imagemresposta", alt_id: 0, tipo: "r" }];
+
+		for (var i = 0; i < proximaAlternativa; i++) {
+			if (!document.getElementById("imagemalternativa" + i)) {
+				continue;
+			}
+			imagens.push({ id: "imagemalternativa" + i, alt_id: parseInt($("#alt_id" + i).val()), tipo: "a" });
+		}
+		uploadImagem(quiz_id, perg_id, imagens, 0, callback);
+	}
+
+	$("#form-perg").validate({
+		rules: {
+			perg_titulo: {
+				required: true,
+				maxlength: 100
+			},
+			perg_texto: {
+				required: true,
+				maxlength: 500
+			},
+			perg_pontuacao: {
+				required: true,
+				number: true
+			},
+			perg_resp_texto: {
+				required: true,
+				maxlength: 500
+			},
+			alt_texto: {
+				required: true,
+				maxlength: 500
+			}
+		},
+
+		submitHandler: function (form) {
+			if (JsonWebApi.active)
+				return;
+
+			var pergunta = {
+				perg_id: parseInt($("#perg_id").val()),
+				perg_titulo: $("#perg_titulo").val().normalize().trim(),
+				perg_texto: $("#perg_texto").val().normalize().trim(),
+				perg_pontuacao: parseInt($("#perg_pontuacao").val()),
+				perg_resp_texto: $("#perg_resp_texto").val().normalize().trim(),
+				quiz_id: parseInt($("#quiz_id").val()),
+				alternativas: []
+			};
+
+			for (var i = 0; i < proximaAlternativa; i++) {
+				if (!document.getElementById("alternativa" + i)) {
+					continue;
+				}
+				pergunta.alternativas.push({
+					alt_id: parseInt($("#alt_id" + i).val()),
+					alt_texto: $("#alt_texto" + i).val().normalize().trim(),
+					alt_correta: ($("#alt_correta" + i).prop("checked") ? 1 : 0)
+				});
+			}
+
+			Notification.wait();
+
+			JsonWebApi.post("/api/quiz/salvarpergunta", pergunta, function (response) {
+				if (response.success) {
+					for (var i = 0, a = 0; i < proximaAlternativa; i++) {
+						if (!document.getElementById("alternativa" + i)) {
+							continue;
+						}
+						$("#alt_id" + i).val(response.value.alternativas[a].alt_id);
+						a++;
+					}
+
+					uploadImagens(response.value.quiz_id, response.value.perg_id, function (erroNoUpload) {
+						//<% if (pergunta) { %>
+
+						if (!erroNoUpload) {
+							Notification.success("Pergunta salva com sucesso " + emoji.happy);
+						} else {
+							Notification.error("Pergunta salva com sucesso, mas as imagens não foram gravadas corretamente. Por favor, tente novamente mais tarde (" + erroNoUpload + ") " + emoji.sad, true);
+						}
+
+						//<% } else { %>
+
+						$("#alternativas").empty();
+						resetForm("#form-perg");
+						proximaAlternativa = 0;
+
+						resetFilePond("imagem");
+						resetFilePond("imagemresposta");
+
+						if (!erroNoUpload) {
+							Notification.success("Pergunta criada com sucesso " + emoji.happy);
+						} else {
+							Notification.error("Pergunta criada com sucesso, mas as imagens não foram gravadas corretamente. Por favor, edite a pergunta mais tarde para enviar as imagens (" + erroNoUpload + ") " + emoji.sad, true);
+						}
+
+						//<% } %>
+					});
+				} else {
+					Notification.error(response.value, true);
+				}
+			});
+		}
+	});
+</script>

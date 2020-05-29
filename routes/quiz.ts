@@ -4,6 +4,7 @@ import wrap = require("express-async-error-wrapper");
 import appsettings = require("../appsettings");
 import Usuario = require("../models/usuario");
 import Tipo = require("../models/quiz/Tipo")
+import Pergunta = require("../models/quiz/pergunta");
 
 
 const router = express.Router();
@@ -37,7 +38,15 @@ router.get("/criarPerg", wrap(async (req: express.Request, res: express.Response
 	if (!u)
 		res.redirect(appsettings.root + "/login");
 	else
-		res.render("quiz/criarPerg", { titulo: "Criar Questao", usuario: u, quiz_id: req.query.qid });
+		res.render("quiz/editarPerg", { titulo: "Criar Pergunta", usuario: u, quiz_id: req.query.quiz_id, pergunta: null });
+}));
+
+router.get("/editarPerg", wrap(async (req: express.Request, res: express.Response) => {
+	let u = await Usuario.cookie(req);
+	if (!u)
+		res.redirect(appsettings.root + "/login");
+	else
+		res.render("quiz/editarPerg", { titulo: "Editar Pergunta", usuario: u, quiz_id: req.query.quiz_id, pergunta: await Pergunta.obter(parseInt(req.query.quiz_id), parseInt(req.query.perg_id)) });
 }));
 
 export = router;

@@ -1,71 +1,50 @@
 // IMPORTS
-    // Express
-    import express = require('express');
+// Express
+import express = require("express");
 
-    // SQL
-    import Sql = require('../../infra/sql');
+// SQL
+import Sql = require("../../infra/sql");
 
-    // Env variables
-    import appsettings = require('../../appsettings');
+// Env variables
+import appsettings = require("../../appsettings");
 
-    // File Upload
-    import FS = require("../../infra/fs");
-    import Upload = require("../../infra/upload");
+// Models
+import Armazenamento = require("./armazenamento");
 
-
-
+// File Upload
+import FS = require("../../infra/fs");
+import Upload = require("../../infra/upload");
 
 export = class Alternativa {
+	// Setting the fields para a classe Alternativa
+	public alt_id: number;
+	public alt_texto: string; // Form
+	public alt_img: number; // Form
+	public alt_correta: number; // Form
+	public perg_id: number; // LAST_INSERT_ID()
 
-    public static readonly extensaoImagem = "png";
+	// Funcao para criar as alternativas
+	public static async criar(sql: Sql, a: Alternativa): Promise<void> {
+        await sql.query("INSERT INTO alternativa (alt_texto, alt_img, alt_correta, perg_id) VALUES (?, 0, ?, ?)", [a.alt_texto, a.alt_correta, a.perg_id]);
 
-    // Setting the fields para a classe Alternativa
-    public id: number;
-    public texto: string; // Form
-    public correta: boolean; // Form
-    public img: number; // Form
-    public perg_id: number; // LAST_INSERT_ID()
+        a.alt_id = await sql.scalar("SELECT LAST_INSERT_ID()");
+	}
 
-
-    public static caminhoRelativoPasta(perg_id: number): string {
-		return `public/uploads/quiz/${perg_id}`;
+	// Funcao para editar as alternativas
+	public static async editar(sql: Sql, a: Alternativa): Promise<void> {
+        await sql.query("UPDATE alternativa SET alt_texto = ?, alt_correta = ? WHERE alt_id = ?", [a.alt_texto, a.alt_correta, a.alt_id]);
     }
-    
-    // Funcao para salvar as alternativas
-    public static async saveAlternative(a: Alternativa, arquivo: any, pergID: number): Promise<string> {
-        let res: string;
 
-        await Sql.conectar(async (sql: Sql) => {
-            try{
-                await sql.beginTransaction();
+	// Funcao para excluir as alternativas
+	public static async excluir(sql: Sql, quiz_id: number, perg_id: number, alt_id: number): Promise<void> {
+        await sql.query("DELETE FROM alternativa WHERE perg_id = ? AND alt_id = ?", [perg_id, alt_id]);
 
-                await sql.query('INSERT INTO alternativa (alt_texto, alt_img, alt_correta, id_perg) VALUES (?, ?, ?, ?)', [a.texto, a.img, a.correta, a.perg_id])
-
-                a.id = await sql.scalar('SELECT LAST_INSERT_ID()');
-
-                await sql.commit()
+        if (sql.linhasAfetadas) {
+            try {
+                await Armazenamento.excluirImagemAlternativa(quiz_id, perg_id, alt_id);
+            } catch (ex) {
+                // Apenas ignora, por hora...
             }
-            catch(e){
-                throw e;
-            }
-        });
-
-        return res;
+        }
     }
-
-    // Funcao para Editar/Atualizar a questao
-    public static async updateAlternative(): Promise<string> {
-        return;
-    }
-
-
-    
-}
-
-
-
-
-
-
-
-
+};

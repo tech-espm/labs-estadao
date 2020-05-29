@@ -83,7 +83,7 @@
 			JsonWebApi.postFormData("/api/quiz/salvar", formData, function (response) {
 				if (response.success) {
 					resetForm("#form-quiz");
-                    location.href = "/quiz/criarPerg?qid=" + response.value;
+                    location.href = "/quiz/criarPerg?quiz_id=" + response.value;
 				} else {
 					Notification.error(response.value, true);
 				}

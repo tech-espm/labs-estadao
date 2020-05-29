@@ -2,10 +2,21 @@
 
 var filePondRegisterOk = false;
 
-function addFilePondToFormData(id, formData) {
-	const filePondElement = document.getElementById(id);
-	const name = filePondElement.getAttribute("data-pond-original-name");
-	formData.append(name, filePondElement["data-pond-file"]);
+function addFilePondToFormData(id, formData, forcedName) {
+	var filePondElement = document.getElementById(id);
+	var name = filePondElement.getAttribute("data-pond-original-name");
+	var file = filePondElement["data-pond-file"];
+	if (file) {
+		formData.append(forcedName || name, file);
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function resetFilePond(id) {
+	var filePondElement = document.getElementById(id);
+	filePondElement["data-pond-file"] = null;
 }
 
 function prepareFilePond(id, includePreview) {

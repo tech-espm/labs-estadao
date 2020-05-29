@@ -59,6 +59,10 @@ export = class FS {
 			nome.indexOf("/") >= 0) ? null : nome);
 	}
 
+	public static concatenarCaminhosRelativos(caminhoRelativo: string, caminhoRelativo2: string): string {
+		return path.join(caminhoRelativo, caminhoRelativo2);
+	}
+
 	public static async criarDiretorio(caminhoRelativo: string): Promise<void> {
 		caminhoRelativo = FS.ajustarCaminhoRelativo(caminhoRelativo, true);
 
