@@ -80,26 +80,11 @@
 
 			Notification.wait();
 
-			// $.ajax({
-			// 	url: "/api/quiz/salvar",
-			// 	type: "POST",
-			// 	data: formData,
-			// 	processData: false,
-			// 	contentType: false,
-			// 	success: function(r) {
-			// 		Notification.hide();
-			// 		console.log("result",r)
-			// 	},
-			// 	error: function (e) {
-			// 		Notification.hide();
-			// 		console.log("some error", e);
-			// 	}
-			// });
-
 			JsonWebApi.postFormData("/api/quiz/salvar", formData, function (response) {
 				if (response.success) {
 					resetForm("#form-quiz");
 					Notification.success("OK " + emoji.happy);
+					//location.href = "/quiz/criarPerg:qid=" + data;
 				} else {
 					Notification.error(response.value, true);
 				}

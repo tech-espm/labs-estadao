@@ -41,13 +41,14 @@ export = class Quiz {
 
                 await sql.query('INSERT INTO quiz (quiz_nome, quiz_desc, quiz_img, id_tipo) VALUES (?, ?, 1, ?)', [q.nome, q.desc, q.tipo_id]); //TODO falta a descricao no DB
 
-                q.id = await sql.scalar('SELECT LAST_INSERT_ID()') as number; //* Getting the quiz ID - Send to the Pergunta!!
+                q.id = await sql.scalar('SELECT LAST_INSERT_ID()') as number; 
                 
                 await FS.criarDiretorio(Quiz.caminhoRelativoPasta(q.id));
 
                 // File Upload 
-                await Upload.gravarArquivo(imagem, Quiz.caminhoRelativoPasta(q.id), Quiz.nomeArquivoImagem(q.id) ) //TODO - Check Rafa's project
-
+                await Upload.gravarArquivo(imagem, Quiz.caminhoRelativoPasta(q.id), Quiz.nomeArquivoImagem(q.id) );
+                
+                res = q.id.toString();
 
                 await sql.commit()
             } catch (e) {
@@ -57,14 +58,6 @@ export = class Quiz {
         
         return res;
     }
-
-    // Funcao para Salvar o QUIZ
-    public static async saveQuiz(q: Quiz): Promise<string> {
-
-        return;
-    }
-
-    // Funcao para criar uma nova PERGUNTA
 
     
 }

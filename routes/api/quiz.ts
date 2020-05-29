@@ -30,21 +30,11 @@
         if(q){
             q.nome = req.body.titulo
             q.desc = req.body.desc
-            //q.img = parseInt(req.body.versao)
             q.tipo_id = parseInt(req.body.tipo)
-            // q.img = parseInt(req.body.versao)
         }
-        
+
         jsonRes(res, 400, q && validaArquivo(req["file"]) ? await Quiz.createQuiz(q, req["file"]) : "Dados inválidos");
 
-        // jsonRes(res, 400, "OK")
-        // Send the quiz ID
-        // if(q){
-        //     // Usar a funcao saveQuiz() 
-        //     // res.json(q.id);
-        //     console.log(q.nome)
-        // }
-        // res.status(400);
         /*
         $.ajax({
             ...
