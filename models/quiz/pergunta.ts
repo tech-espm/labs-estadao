@@ -12,7 +12,6 @@
     import Quiz = require('./quiz')
     import Alternativa = require('./alternativa');
 
-
     // File Upload
     import FS = require("../../infra/fs");
     import Upload = require("../../infra/upload");
@@ -35,7 +34,7 @@ export = class Pergunta {
     }
     
     // Funcao para salvar a questao
-    public static async createQuestion(p: Pergunta, arquivo:any): Promise<string> {
+    public static async createQuestion(p: Pergunta, arquivo:any, a:any, a_images:any): Promise<string> {
         let res: string;
         
         
@@ -44,21 +43,19 @@ export = class Pergunta {
                 await sql.beginTransaction()
                 
                 //* Inserting the question the DB
-                await sql.query('INSERT INTO pergunta (perg_titulo, perg_texto, perg_img, perg_pontuacao, perg_resp_texo, perg_resp_img, id_quiz) VALUES (?, ?, ?, ?, ?, ?)', [p.titulo, p.texto, p.img, p.pontuacao, p.resp_texto, p.resp_img, p.quiz_id])
+                await sql.query('INSERT INTO pergunta (perg_titulo, perg_texto, perg_img, perg_pontuacao, perg_resp_texo, perg_resp_img, id_quiz) VALUES (?, ?, ?, ?, ?, ?, ?)', [p.titulo, p.texto, p.img, p.pontuacao, p.resp_texto, p.resp_img, p.quiz_id])
                 
                 //* Getting the ID
                 p.id = await sql.scalar('SELECT LAST_INSERT_ID()') as number;
 
                 // File Upload
                 await Upload.gravarArquivo(arquivo, Quiz.caminhoRelativoPasta(p.quiz_id), Pergunta.nomeArquivoImagem(p.id) ) // Imagem da Pergunta
-                //await Upload.gravarArquivo(a_images, Pergunta.caminhoRelativoPasta(p.id), Alternativa + "." + Pergunta.extensaoImagem ) // Salvar as imagens das alternativas
 
                 //* Salvando as alternativas 
-                //for (let i = 0; i < a.length; i++) {
-                //    a[i].perg_id = p.id;
-                //    Alternativa.saveAlternative(a[i], a_images[i]); 
-                //}
-
+                for (let i = 0; i < a.length; i++) {
+                   a[i].perg_id = p.id;
+                   Alternativa.saveAlternative(a[i], a_images[i], p.id); 
+                }
 
                 await sql.commit()
             }

@@ -37,7 +37,6 @@ router.get("/criarPerg", wrap(async (req: express.Request, res: express.Response
 	if (!u)
 		res.redirect(appsettings.root + "/login");
 	else
-		console.log(req.query.qid)
 		res.render("quiz/criarPerg", { titulo: "Criar Questao", usuario: u, quiz_id: req.query.qid });
 }));
 

@@ -16,16 +16,8 @@
                     </div>  
 
                     <div class= "form-group "> 
-<<<<<<< HEAD
-                        <label for="desc">Descricao :</label>      
-                        <div class="form-inline">                          
-                            <textarea id="desc" rows="3" name="desc" placeholder="Descricao da Pergunta" class="form-control " style="width: 55vh; resize: vertical;"></textarea>
-                            <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button> 
-                        </div>
-=======
                         <label for="desc">Descricao :</label>                           
                         <textarea id="desc" rows="3" name="desc" placeholder="Descricao da Pergunta" class="form-control "  style="resize: vertical;"></textarea>
->>>>>>> 32b3d6fcd846fce7976e08c3cd4684bd2f48eada
                     </div>
 
                     <div class="form-row">
@@ -51,15 +43,9 @@
                         <div class= "form-group col-md-6"> 
                             <label for="titulo">Alternativa 2 :</label>
                             <div class="form-inline">
-<<<<<<< HEAD
-                                <input TYPE="radio" NAME="opcao" id= "radioAlternativa2" VALUE="alternativa2" > 
-                                <input type="text"  id="alternativa2" class="form-control"/> 
-                                <button style="background-color: #fff" class="btn" type="file"> <i class="fa fa-image fa-lg"></i> </button>
-=======
                                 <input type="radio" name="opcao" id= "radioAlternativa2" value="2" > 
                                 <input type="text"  id="alternativa2" name="alternativa2" class="form-control"/> 
                                 <button style="background-color: #fff" class="btn"> <i class="fa fa-image fa-lg"></i> </button>
->>>>>>> 32b3d6fcd846fce7976e08c3cd4684bd2f48eada
                             </div>
                         </div> 
                         <div class= "form-group col-md-6"> 
@@ -74,7 +60,7 @@
 
                     </div>
 
-                    <input type="hidden" id="quiz-id" > <%=quiz_id%> </input>
+                    <input type="hidden" id="quiz-id" value="<%=quiz_id%>"> 
                     
                     <div class="form-row ">
                         <div class="col form-group col-md-8">
@@ -92,6 +78,34 @@
                 
         </form>    
     </div>
+    <a href="#" onclick="toggle_visibility()" style="background-color: #4752f6; 
+                        color: white; 
+                        padding: 10px 22px; 
+                        text-align: center; 
+                        text-decoration: none; 
+                        display: inline-block;"
+                        ><i class="fa fa-plus fa-fw"></i>Add resposta</a>
+
+    
+</div>
+
+<div style="display: none;" class="row" id="resp-form">
+    <div class="col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+        <form id="form-resp" class="panel panel-default" action="#" enctype="multipart/form-data">
+            <div class="panel-heading">Resposta</div> 
+                <div class="panel-body no-bottom">
+
+                    <div class="form-group">
+                        <input type="file" id="imagem" name="imagem" style="display: none;" />
+                    </div>
+
+                    <div class= "form-group "> 
+                        <label for="resp-desc">Texto :</label>                           
+                        <textarea id="resp-desc" rows="3" name="resp-desc" placeholder="Resposta" class="form-control" style="resize: vertical;"></textarea>
+                    </div>
+                </div>
+        </form>
+    </div>
 </div>
 
 
@@ -106,6 +120,18 @@
 <%- contentFor("scripts") %>
 <script type="text/javascript">
     "use strict";
+
+    // Funcao para mostrar o formulario de resposta - Melhorar !!!!
+    function toggle_visibility(){
+        let resp = document.getElementById("resp-form");
+
+        if(resp.style.display == 'block'){
+            resp.style.display = 'none';
+        }
+        else{
+            resp.style.display = 'block';
+        }
+    }
     
     prepareFilePond("imagem", true);
     
@@ -117,7 +143,10 @@
 			},
 			desc: {
 				required: false
-			},
+            },
+            alternativa1: {
+                required: true
+            },
         },
         
 
@@ -126,9 +155,15 @@
                 return;
                 
             let formData = new FormData(form);
-            // let quiz_id = $("#quiz-id").val()
-            // formData.append("qid", quiz_id);
-            // console.log(quiz_id)
+
+            // Adding the quiz ID to the formData
+            let quiz_id = $("#quiz-id").val();
+            formData.append("qid", quiz_id);
+
+            // Adding resp-form to formData
+            let resp_desc = $("#resp-desc").val();
+            formData.append("resp_texto", resp_desc);
+
             addFilePondToFormData("imagem", formData);
 
             Notification.wait();
