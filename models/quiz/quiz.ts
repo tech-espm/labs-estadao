@@ -51,6 +51,8 @@ export = class Quiz {
                 res = q.id.toString();
 
                 await sql.commit()
+                res = q.id.toString()
+                
             } catch (e) {
                 res = (e.message || e.toString());
             }

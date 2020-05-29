@@ -30,19 +30,11 @@
         if(q){
             q.nome = req.body.titulo
             q.desc = req.body.desc
-            q.tipo_id = parseInt(req.body.tipo)
+            q.tipo_id = parseInt(req.body.tipo) 
         }
 
         jsonRes(res, 400, q && validaArquivo(req["file"]) ? await Quiz.createQuiz(q, req["file"]) : "Dados inválidos");
 
-        /*
-        $.ajax({
-            ...
-            success: function(data) {
-                location.href = "/quiz/editar?id=" + data;
-            }
-        })
-        */
     }));
 
 
@@ -52,9 +44,12 @@
 
         if(p){
             // Usar a funcao saveQuestion() 
-            res.json(p.id);
+            console.log(p)
+            
         }
-        res.status(400);
+        console.log(p)
+        res.json("OK");
+        
         /*
         $.ajax({
             ...
@@ -100,6 +95,8 @@
 
 
 export = router;
+
+
 
 
 

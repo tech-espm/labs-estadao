@@ -32,12 +32,13 @@ router.get("/jogar", wrap(async (req: express.Request, res: express.Response) =>
 		res.render("quiz/jogar", { layout:"layout-jogo", titulo: "Jogar", usuario: u });
 }));
 
-router.get("/criarPerg:qid", wrap(async (req: express.Request, res: express.Response) => {
+router.get("/criarPerg", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
 	if (!u)
 		res.redirect(appsettings.root + "/login");
 	else
-		res.render("quiz/criarPerg", { titulo: "Criar Questao", usuario: u });
+		console.log(req.query.qid)
+		res.render("quiz/criarPerg", { titulo: "Criar Questao", usuario: u, quiz_id: req.query.qid });
 }));
 
 export = router;

@@ -77,14 +77,13 @@
 
 			var formData = new FormData(form);
 			addFilePondToFormData("imagem", formData);
-
+	
 			Notification.wait();
 
 			JsonWebApi.postFormData("/api/quiz/salvar", formData, function (response) {
 				if (response.success) {
 					resetForm("#form-quiz");
-					Notification.success("OK " + emoji.happy);
-					//location.href = "/quiz/criarPerg:qid=" + data;
+                    location.href = "/quiz/criarPerg?qid=" + response.value;
 				} else {
 					Notification.error(response.value, true);
 				}
