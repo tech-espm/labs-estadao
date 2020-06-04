@@ -207,7 +207,7 @@
             html +=
                 '<button ' +
                 (pergunta.alternativas[i].alt_correta ? 'id="botao-correto"' : '') +
-                ' type="button" class="btn btn-default btn-outline" onclick="responder(this, ' +
+                ' type="button" class="btn btn-default btn-outline btn-lg btn-block" onclick="responder(this, ' +
                 pergunta.alternativas[i].alt_correta +
                 ',' +
                 pergunta.alternativas[i].alt_id +
@@ -250,9 +250,9 @@
             acertos++;
             pontuacao += quiz.perguntas[perguntaAtual].perg_pontuacao;
         } else {
-            botao.className = "btn btn-danger";
+            botao.className = "btn btn-danger btn-lg btn-block";
         }
-        document.getElementById("botao-correto").className = "btn btn-success";
+        document.getElementById("botao-correto").className = "btn btn-success btn-lg btn-block";
 
         // Armazena um objeto com o id da questão e da
         // resposta para enviar para o servidor ao final
@@ -268,7 +268,8 @@
 
     function exibirNoticia() {
         $("#noticia").fadeIn(400, "swing");
-        setTimeout(ocultarAguarde, 3000);
+        ocultarAguarde();
+        //setTimeout(ocultarAguarde, 3000);
     }
 
     function ocultarAguarde() {
@@ -318,9 +319,9 @@
         // Vamos construir o html aqui. Existem outras alternativas...
         var html = '<h2>';
         if (perc >= 50)
-            html += 'Parabéns!';
+            html += 'Parabéns você está por dentro das notícias atuais! Acertou ' + acertos + ' de ' + quiz.perguntas.length + ' perguntas.';
         else
-            html += 'Não foi dessa vez.';
+            html += 'Não foi dessa vez. Acertou ' + acertos + ' de ' + quiz.perguntas.length + ' perguntas.';
         html += '</h2>';
         
         html += '<div class="progress">' +
