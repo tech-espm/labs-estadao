@@ -1,5 +1,7 @@
 "use strict";
 
+import { FilePond } from "filepond";
+
 var filePondRegisterOk = false;
 
 function addFilePondToFormData(id, formData, forcedName) {
@@ -16,8 +18,8 @@ function addFilePondToFormData(id, formData, forcedName) {
 
 function resetFilePond(id) {
 	var filePondElement = document.getElementById(id);
-	filePondElement["data-pond-file"] = null;
 }
+
 
 function prepareFilePond(id, includePreview) {
 	if (!filePondRegisterOk) {
@@ -48,8 +50,10 @@ function prepareFilePond(id, includePreview) {
 		labelMaxFileSizeExceeded: "Tamanho do arquivo excedeu o limite de 1MB",
 		labelFileTypeNotAllowed: "Tipo do arquivo não permitido (deve ser PNG, JPEG ou GIF)"
 	});
+
 	const filePondElement = document.getElementById(id);
 	filePondElement.setAttribute("data-pond-original-name", name);
+
 	pond.on("addfile", function (error, file) {
 		if (error) {
 			return;

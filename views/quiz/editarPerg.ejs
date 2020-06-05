@@ -37,8 +37,8 @@
 
 				<div class="form-group">
 					<label for="perg_resp_texto">Explicação da Resposta</label>
-					<textarea id="perg_resp_texto" rows="3" name="perg_resp_texto" placeholder="Texto a ser exibido depois de respondida a pergunta" class="form-control" style="resize: vertical;"><%= (pergunta ? pergunta.perg_resp_texto : "") %></textarea>
-				</div>
+					<textarea id="perg_resp_texto" rows="3" name="perg_resp_texto" placeholder="Texto a ser exibido depois da pergunta ser respondida" class="form-control" style="resize: vertical;"><%= (pergunta ? pergunta.perg_resp_texto : "") %></textarea>
+				</div> 
 
 				<div class="form-group">
 					<label for="imagemresposta">Imagem da Resposta</label>
@@ -51,42 +51,46 @@
 					<img class="imagem" id="imagemrespostaatual" src="<%- (pergunta.perg_resp_img ? (root + "/uploads/quiz/" + quiz_id + "/" + pergunta.perg_id + "/r" + pergunta.perg_id + ".jpg?" + pergunta.perg_resp_img) : (root + "/imagens/placeholder.png")) %>" />
 				</div>
 				<% } %>
-
-				<hr />
-
-				<button type="button" onclick="adicionarAlternativa()">Nova alternativa</button>
-
+				
 				<div id="alternativas">
-
 					<% if (pergunta && pergunta.alternativas) { for (let i = 0; i < pergunta.alternativas.length; i++) { let alternativa = pergunta.alternativas[i]; %>
-					<div class="form-group" id="alternativa<%= i %>">
-						<hr />
-						<button onclick="removerAlternativa('<%= i %>')">Remover</button>
-						<label for="alt_correta<%= i %>">Alternativa</label>
-						<input type="hidden" id="alt_id<%= i %>" value="<%= alternativa.alt_id %>" />
-						<input type="radio" id="alt_correta<%= i %>" name="alt_correta" value="1" <%= (alternativa.alt_correta ? 'checked="checked"' : '') %> />
-						<textarea id="alt_texto<%= i %>" rows="3" name="alt_texto" placeholder="Texto da alternativa" class="form-control" style="resize: vertical;"><%= alternativa.alt_texto %></textarea>
-						<input type="file" id="imagemalternativa<%= i %>" name="imagemalternativa<%= i %>" style="display: none;" />
-						<label>Imagem da Alternativa (atual)</label>
-						<img class="imagem" id="imagemalternativa<%= i %>atual" src="<%- (alternativa.alt_img ? (root + "/uploads/quiz/" + quiz_id + "/" + pergunta.perg_id + "/a" + alternativa.alt_id + ".jpg?" + alternativa.alt_img) : (root + "/imagens/placeholder.png")) %>" />
-					</div>
+						<div class="form-group" id="alternativa<%= i %>">
+							<hr />
+							<div class="row">
+								<div class="col-md-8">
+									<label for="alt_correta<%= i %>">Alternativa</label>
+									<input type="radio" id="alt_correta<%= i %>" name="alt_correta" value="1" <%= (alternativa.alt_correta ? 'checked="checked"' : '') %> />
+								</div>
+								<div class="col-md-4">
+									<button onclick="removerAlternativa('<%= i %>')">Remover</button>
+								</div>
+							</div>
+							<input type="hidden" id="alt_id<%= i %>" value="<%= alternativa.alt_id %>" />
+							<textarea id="alt_texto<%= i %>" rows="3" name="alt_texto" placeholder="Texto da alternativa" class="form-control" style="resize: vertical;"><%= alternativa.alt_texto %></textarea>
+							<input type="file" id="imagemalternativa<%= i %>" name="imagemalternativa<%= i %>" style="display: none;" />
+							<label>Imagem da Alternativa (atual)</label>
+							<img class="imagem" id="imagemalternativa<%= i %>atual" src="<%- (alternativa.alt_img ? (root + "/uploads/quiz/" + quiz_id + "/" + pergunta.perg_id + "/a" + alternativa.alt_id + ".jpg?" + alternativa.alt_img) : (root + "/imagens/placeholder.png")) %>" />
+						</div>
 					<% } } %>
 
 				</div>
 
-				<div class="form-row">
-					<div class="col form-group col-md-8">
-						<button id="clear" class="btn btn-danger">Finalizar</button>
+				<div class="form-group row">
+					<div class="col-md-8 ">
+						<button id="clear" class="btn btn-danger ">Finalizar</button>
+						<button id="criarQuestao" class="btn btn-success " type="submit"><%- (pergunta ? "Salvar Pergunta" : "Criar Pergunta") %></button>
 					</div>
 
-					<div class="col form-group col-md-4">
-						<button id="criarQuestao" class="btn btn-success" type="submit"><%- (pergunta ? "Salvar Pergunta" : "Criar Pergunta") %></button>
+					<div class="col-md-4">
+						<button type="button" class="btn btn-primary" onclick="adicionarAlternativa()">Adicionar alternativa</button>
 					</div>
-				</div>
+							
+				</div>	
 			</div>
 		</form>
 	</div>
 </div>
+
 
 <%- contentFor("styles") %>
 <style type="text/css">
@@ -99,16 +103,18 @@
 		border: 1px solid #ddd;
 		box-shadow: 0 1px 0 #e5e5e5;
 	}
+
 	.filepond--root {
 		font-size: 1.5rem;
 	}
+
+
+
 </style>
 
 <%- contentFor("scripts") %>
 <script type="text/javascript">
 	"use strict";
-
-	// Funcao para mostrar o formulario de resposta - Melhorar !!!!
 
 	prepareFilePond("imagem", true);
 	prepareFilePond("imagemresposta", true);
@@ -127,10 +133,17 @@
 
 		$("#alternativas").append(`<div class="form-group" id="alternativa${proximaAlternativa}">
 			<hr />
-			<button onclick="removerAlternativa('${proximaAlternativa}')">Remover</button>
-			<label for="alt_correta${proximaAlternativa}">Alternativa</label>
+			<div class="row"> 
+				<div class="col-md-8 "> 
+					<input type="radio" id="alt_correta${proximaAlternativa}" name="alt_correta" value="1" />
+					<label for="alt_correta${proximaAlternativa}">Alternativa ${proximaAlternativa + 1 }</label>
+				</div>
+				<div class= "col-md-4"> 
+					<button class="btn btn-danger " onclick="removerAlternativa('${proximaAlternativa}')">Remover</button>
+				</div>
+	
+			</div>
 			<input type="hidden" id="alt_id${proximaAlternativa}" value="0" />
-			<input type="radio" id="alt_correta${proximaAlternativa}" name="alt_correta" value="1" />
 			<textarea id="alt_texto${proximaAlternativa}" rows="3" name="alt_texto" placeholder="Texto da alternativa" class="form-control" style="resize: vertical;"></textarea>
 			<input type="file" id="imagemalternativa${proximaAlternativa}" name="imagemalternativa${proximaAlternativa}" style="display: none;" />
 			<% if (pergunta) { %>
@@ -147,6 +160,7 @@
 				return;
 
 		$("#alternativa" + indice).remove();
+		proximaAlternativa--;
 	}
 
 	function uploadImagem(quiz_id, perg_id, imagens, i, callback) {
