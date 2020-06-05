@@ -28,12 +28,10 @@ router.post("/salvar", multer().single("imagem"), wrap(async (req: express.Reque
     let q = req.body as Quiz;
 
     if (q) {
-        q.nome = req.body.titulo;
-        q.desc = req.body.desc;
-        q.tipo_id = parseInt(req.body.tipo);
+        q.id_tipo = parseInt(req.body.id_tipo);
     }
 
-    jsonRes(res, 400, q && validaArquivo(req["file"]) ? await Quiz.createQuiz(q, req["file"]) : "Dados inválidos");
+    jsonRes(res, 400, (q && (!req["file"] || validaArquivo(req["file"]))) ? await Quiz.createQuiz(q, req["file"]) : "Dados inválidos");
 }));
 
 // Salvar Perguntas e Alternativas

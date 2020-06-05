@@ -4,18 +4,28 @@
 			<div class="panel-heading">Informações do Quiz</div>
 			<div class="panel-body no-bottom">
 				<div class="form-group">
-					<label for="titulo">Nome do quiz:</label>
-					<input type="text" id="titulo" name="titulo" class="form-control" required />
+					<label for="quiz_nome">Nome do Quiz</label>
+					<input type="text" id="quiz_nome" name="quiz_nome" class="form-control" maxlength="100" required />
 				</div>
 
 				<div class="form-group">
-					<label for="descricao">Descrição: </label>
-					<textarea id="desc" rows="3" name="desc" class="form-control" style="resize: vertical;"></textarea>
+					<label for="quiz_desc">Descrição</label>
+					<textarea id="quiz_desc" rows="3" name="quiz_desc" class="form-control" maxlength="500" style="resize: vertical;"></textarea>
 				</div>
 
 				<div class="form-group">
-					<label for="tipo">Tipo:</label>
-					<select id="tipo" class="form-control" name="tipo" size="1">
+					<label for="quiz_style">HTML Personalizado (Final do head)</label>
+					<textarea id="quiz_style" rows="3" name="quiz_style" class="form-control" maxlength="1000" style="resize: vertical;"></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="quiz_script">HTML Personalizado (Final do body)</label>
+					<textarea id="quiz_script" rows="3" name="quiz_script" class="form-control" maxlength="1000" style="resize: vertical;"></textarea>
+				</div>
+
+				<div class="form-group">
+					<label for="id_tipo">Tipo</label>
+					<select id="id_tipo" class="form-control" name="id_tipo" size="1">
 						<option value="" data-description="">Selecione...</option>
 						<% for (var i = 0; i < lista.length; i++) { %>
 						<option value="<%= lista[i].tipo_id %>" data-description="<%= lista[i].tipo_desc %>"> <%= lista[i].tipo_nome %></option>
@@ -30,9 +40,7 @@
 			</div>
 
 			<div class="panel-footer">
-				<button class="btn btn-default btn-outline" type="reset">Limpar</button>
-				<button class="btn btn-success" type="submit">Criar</button>
-				<!--<input value="Salvar Alterações" class="btn btn-primary btn-lg btn-block" type="submit" />-->
+				<button class="btn btn-success" type="submit">Criar Quiz</button>
 			</div>
 		</form>
 	</div>
@@ -57,14 +65,25 @@
 
 	$("#form-quiz").validate({
 		rules: {
-			titulo: {
-				required: true
+			quiz_nome: {
+				required: true,
+				maxlength: 100
 			},
-			desc: {
-				required: false
+			quiz_desc: {
+				required: false,
+				maxlength: 500,
 			},
-			tipo: {
-				required: true
+			quiz_style: {
+				required: false,
+				maxlength: 1000,
+			},
+			quiz_script: {
+				required: false,
+				maxlength: 1000,
+			},
+			id_tipo: {
+				required: true,
+				number: true
 			}
 		},
 

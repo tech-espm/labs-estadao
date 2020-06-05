@@ -1,7 +1,5 @@
 "use strict";
 
-import { FilePond } from "filepond";
-
 var filePondRegisterOk = false;
 
 function addFilePondToFormData(id, formData, forcedName) {
@@ -18,8 +16,17 @@ function addFilePondToFormData(id, formData, forcedName) {
 
 function resetFilePond(id) {
 	var filePondElement = document.getElementById(id);
+	var pond;
+	if ((pond = filePondElement.originalPond)) {
+		var pond_ids = [];
+		if (pond.getFiles().length) {
+			pond.getFiles().forEach(function(file) {
+				pond_ids.push(file.id);
+			});
+		}
+		pond.removeFiles(pond_ids);
+	}
 }
-
 
 function prepareFilePond(id, includePreview) {
 	if (!filePondRegisterOk) {
@@ -53,6 +60,7 @@ function prepareFilePond(id, includePreview) {
 
 	const filePondElement = document.getElementById(id);
 	filePondElement.setAttribute("data-pond-original-name", name);
+	filePondElement.originalPond = pond;
 
 	pond.on("addfile", function (error, file) {
 		if (error) {
