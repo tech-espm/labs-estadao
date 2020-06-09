@@ -62,5 +62,14 @@ export = class Quiz {
         return res;
     }
 
+    public static async listar(): Promise<Quiz[]> {
+		let lista: Quiz[] = null;
+
+		await Sql.conectar(async (sql: Sql) => {
+			lista = await sql.query("select u.quiz_id, u.quiz_nome, u.quiz_data_cria from quiz u inner join perfil p on p.id = u.idperfil order by u.login asc") as Quiz[];
+		});
+
+		return (lista || []);
+	}
     
 }
