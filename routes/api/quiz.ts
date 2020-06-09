@@ -21,6 +21,7 @@ import Armazenamento = require("../../models/quiz/armazenamento");
 import Pergunta = require("../../models/quiz/pergunta");
 import Quiz = require("../../models/quiz/quiz");
 import Alternativa = require("../../models/quiz/alternativa");
+import Usuario = require("../../models/usuario");
 
 // ROTAS
 // Salvar Quiz
@@ -95,4 +96,10 @@ router.post("/uploadimagem", multer().single("imagem"), wrap(async (req: express
 
 }));
 
+router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
+    let u = await Usuario.cookie(req, res, true);
+    if (!u)
+        return;
+    res.json(await Quiz.listar());
+}));
 export = router;
