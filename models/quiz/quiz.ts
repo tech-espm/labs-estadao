@@ -66,10 +66,68 @@ export = class Quiz {
 		let lista: Quiz[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
-			lista = await sql.query("select u.quiz_id, u.quiz_nome, u.quiz_data_cria from quiz u inner join perfil p on p.id = u.idperfil order by u.login asc") as Quiz[];
-		});
+			lista = await sql.query("SELECT q.quiz_id, q.quiz_nome, q.quiz_desc, t.tipo_nome FROM quiz q INNER JOIN tipo t ON q.id_tipo = t.tipo_id") as Quiz[];
+        });
+        
 
 		return (lista || []);
-	}
+    }
+    
+    public static async obter(id): Promise<Quiz> {
+        let lista: Quiz[] = null;
+
+		await Sql.conectar(async (sql: Sql) => {
+            
+			lista = await sql.query("SELECT quiz_id, quiz_nome, quiz_desc,quiz_style, quiz_script, id_tipo, quiz_img  FROM quiz WHERE quiz_id = ?", [id]) as Quiz[];
+            
+		});
+
+		return ((lista && lista[0]) || null);
+    }
+
+    
+	public static async editar(q: Quiz): Promise<string> {
+		let res: string = null;
+
+		await Sql.conectar(async (sql: Sql) => {
+            await sql.beginTransaction();
+
+            // Inserting the question the DB
+            await sql.query(
+                "UPDATE quiz SET quiz_nome = ?, quiz_desc = ?, quiz_style = ?, quiz_script = ?, id_tipo = ? WHERE quiz_id = ?",
+                [q.quiz_nome, q.quiz_desc,q.quiz_style, q.quiz_script, q.id_tipo, q.quiz_id]
+            );
+
+            
+            await sql.commit();
+		});
+
+		return res;
+    }
+    
+    public static async incrementarVersaoImagem(quiz_id: number): Promise<number> {
+        let res = 0;
+
+        await Sql.conectar(async (sql: Sql) => {
+            await sql.query("UPDATE quiz SET quiz_img = quiz_img + 1 WHERE quiz_id = ? ", [quiz_id]);
+
+            if (sql.linhasAfetadas) {
+                res = await sql.scalar("SELECT quiz_img FROM quiz WHERE quiz_id = ? ", [quiz_id]) as number;
+            }
+		});
+
+        return res;
+    }
+
+    public static async excluir(quiz_id: number ): Promise<string>{
+		let res: string = null;
+
+        await Sql.conectar(async (sql: Sql) => {
+            await sql.query("DELETE FROM quiz WHERE quiz_id = ?", [quiz_id]);
+        
+        });
+
+        return res;
+    }
     
 }

@@ -18,7 +18,7 @@
 			</div>
 			<div class="modal-body">
 				<p>
-					Tem certeza que deseja excluir o usuário <span id="lblNome"></span>? Esta operação <b class="col-h">NÃO</b> pode ser desfeita!
+					Tem certeza que deseja excluir esse Quiz: "<span id="lblNome"></span>" ? Esta operação <b class="col-h">NÃO</b> pode ser desfeita!
 				</p>
 			</div>
 			<div class="modal-footer">
@@ -29,7 +29,7 @@
 	</div>
 </div>
 
-<div class="modal fade" tabindex="-1" role="dialog" id="modalRedefinirSenha">
+<div class="modal fade" tabindex="-1" role="dialog" id="modalExcluirPergunta">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -38,12 +38,33 @@
 			</div>
 			<div class="modal-body">
 				<p>
-					Tem certeza que deseja redefinir a senha do usuário <span id="lblNomeRedefinirSenha"></span> para "1234"? Esta operação <b class="col-h">NÃO</b> pode ser desfeita!
+					Tem certeza que deseja excluir essa Pergunta: "<span id="lblNome2"></span>" ? Esta operação <b class="col-h">NÃO</b> pode ser desfeita!
 				</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary" onclick="redefinirSenha()"><i class="fa fa-check"></i>Redefinir Senha</button>
+				<button type="button" class="btn btn-danger" onclick="excluirPergunta()"><i class="fa fa-check"></i>Excluir</button>
 				<button type="button" class="btn btn-outline btn-default" data-dismiss="modal"><i class="fa fa-times"></i>Cancelar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalPerguntas">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Perguntas</h4>
+			</div>
+			<div class="modal-body">
+				<div class="panel panel-default">
+					<div class="panel-body dataTable_wrapper">
+						<table class="table table-striped table-hover" id="perguntas"></table>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline btn-default" data-dismiss="modal"><i class="fa fa-times"></i>Fechar</button>
 			</div>
 		</div>
 	</div>
@@ -54,17 +75,33 @@
 	//<![CDATA[
 	"use strict";
 
-	var tabela = prepareDataTable("tabela", {
+	let tabela = prepareDataTable("tabela", {
 		order: [[1, "asc"]],
 		deferRender: true,
 		columns: [
-			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"/quiz/criar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Perguntas\" type=\"button\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-eye\"></i></button> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
-			{ title: "Login", "class": "col-25", render: encode, data: "login" },
-			{ title: "Nome", "class": "col-50", render: encode, data: "nome" },
-			{ title: "Perfil", "class": "col-25", render: encode, data: "perfil" },
+			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "quiz_id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"/quiz/editar?qid="+ row.quiz_id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Perguntas\" type=\"button\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-eye\"></i></button> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
+			{ title: "Nome", "class": "col-25", render: encode, data: "quiz_nome" },
+			{ title: "Descrição", "class": "col-50", render: encode, data: "quiz_desc" },
+			{ title: "Tipo", "class": "col-25", render: encode, data: "tipo_nome" },
 		],
 		data: <%- lista %>,
-		export: { title: "Usuários" }
+		export: { title: "Quizes" }
+		
+	});
+
+	let quiz = tabela.row(trClicada).data();
+
+	let tabelaPergunta = prepareDataTable("perguntas", {
+			order: [[1, "asc"]],
+			deferRender: true,
+			columns: [
+				{ title: "", "class": "col-min", data: "perg_id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"/quiz/editarPerg?quiz_id="+ quiz.quiz_id + "&perg_id=" + row.perg_id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" id=\"excluirBtt\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
+				{ title: "Titulo", "class": "col-25", render: encode, data: "perg_titulo" },
+				{ title: "Texto", "class": "col-50", render: encode, data: "perg_texto" },
+				{ title: "Pontuação", "class": "col-50", render: encode, data: "perg_resp_texto" },
+			],
+			export: { title: "Perguntas" }
+		
 	});
 
 	var trClicada;
@@ -72,25 +109,65 @@
 	$("#tabela").on("click", "tbody button", function () {
 		if (JsonWebApi.active)
 			return;
-
-		var usuario = tabela.row(trClicada = this.parentNode.parentNode).data();
+		
+		var quiz = tabela.row(trClicada = this.parentNode.parentNode).data();
 
 		if (this.getAttribute("data-excluir")) {
-			$("#lblNome").text(usuario.login);
+			$("#lblNome").text(quiz.quiz_nome);
 
 			$("#modalExcluir").modal({
 				backdrop: "static",
 				keyboard: true
 			});
-		} else {
-			$("#lblNomeRedefinirSenha").text(usuario.login);
 
-			$("#modalRedefinirSenha").modal({
+		} else {
+			$("#modalPerguntas").modal({
 				backdrop: "static",
 				keyboard: true
 			});
+
+			obterPerguntas();
+
 		}
 	});
+
+
+	$("excluirBtt").click(() => {
+		if (JsonWebApi.active)
+			return;
+		console.log("oi")
+		let pergunta = tabelaPergunta.row(trClicada = this.parentNode.parentNode).data();
+		
+		$("#lblNome2").text(pergunta.perg_titulo);
+
+		$("#modalExcluirPergunta").modal({
+			backdrop: "static",
+			keyboard: true
+		});
+	})
+
+	function excluirPergunta(){
+
+		var quiz = tabela.row(trClicada).data();
+		var pergunta = tabelaPergunta.row(trClicada).data();
+
+		
+		$("#modalExcluirPergunta").modal("hide");
+		
+
+		Notification.wait();
+
+		JsonWebApi.get("/api/quiz/excluirPerg", function (response) {
+			if (response.success) {
+				Notification.success("Quiz removido com sucesso! " + emoji.happy);
+				tabela.row(trClicada).remove().draw();
+			} else {
+				Notification.error(response.value, true);
+			}
+			trClicada = null;
+		}, "quiz_id", quiz.quiz_id, "perg_id", pergunta.perg_id);
+		
+	}
 
 	function excluir() {
 		if (JsonWebApi.active || !trClicada)
@@ -98,38 +175,40 @@
 
 		$("#modalExcluir").modal("hide");
 
-		var usuario = tabela.row(trClicada).data();
+		var quiz = tabela.row(trClicada).data();
 
 		Notification.wait();
 
-		JsonWebApi.get("/api/usuario/excluir", function (response) {
+		JsonWebApi.get("/api/quiz/excluir", function (response) {
 			if (response.success) {
-				Notification.success("Usuário excluído com sucesso! " + emoji.happy);
+				Notification.success("Quiz removido com sucesso! " + emoji.happy);
 				tabela.row(trClicada).remove().draw();
 			} else {
 				Notification.error(response.value, true);
 			}
 			trClicada = null;
-		}, "id", usuario.id);
+		}, "quiz_id", quiz.quiz_id);
 	}
 
-	function redefinirSenha() {
-		if (JsonWebApi.active || !trClicada)
+	function obterPerguntas(){
+		if (JsonWebApi.active ){
 			return;
+		}
+		tabelaPergunta.clear().draw();
+		let listaPerg = null;
+		let quiz = tabela.row(trClicada).data();
 
-		$("#modalRedefinirSenha").modal("hide");
-
-		var usuario = tabela.row(trClicada).data();
-
-		Notification.wait();
-
-		JsonWebApi.get("/api/usuario/redefinirSenha", function (response) {
-			if (response.success)
-				Notification.success("Senha redefinida com sucesso! " + emoji.happy);
-			else
+		JsonWebApi.get("/api/quiz/obterPergunta", function(response){
+			if(response.success){
+				listaPerg = response.value;		
+				tabelaPergunta.rows.add(listaPerg).draw();
+			}
+			else {
 				Notification.error(response.value, true);
-			trClicada = null;
-		}, "id", usuario.id);
+			}
+		}, "quiz_id", quiz.quiz_id)
+
+		return listaPerg;
 	}
 
 	//]]>

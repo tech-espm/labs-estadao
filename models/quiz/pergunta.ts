@@ -37,7 +37,8 @@ export = class Pergunta {
 				"SELECT perg_id, perg_titulo, perg_texto, perg_img, perg_pontuacao, perg_resp_texto, perg_resp_img, quiz_id FROM pergunta WHERE quiz_id = ?",
 				[quiz_id]
 			)) as Pergunta[];
-		});
+        });
+        
 
 		return lista || [];
 	}
@@ -153,8 +154,10 @@ export = class Pergunta {
 	}
 
 	// Funcao para Deletar a questao
-	public static async excluir(quiz_id: number, perg_id: number): Promise<void> {
+	public static async excluir(quiz_id: number, perg_id: number): Promise<string> {
         
+        let res: string = null;
+
 		await Sql.conectar(async (sql: Sql) => {
             await sql.query("DELETE FROM pergunta WHERE quiz_id = ? AND perg_id = ?", [quiz_id, perg_id]);
 
@@ -165,7 +168,9 @@ export = class Pergunta {
                     // Apenas ignora, por hora...
                 }
             }
-		});
+        });
+        
+        return res;
 
     }
 

@@ -14,15 +14,25 @@ router.get("/criar", wrap(async (req: express.Request, res: express.Response) =>
 	if (!u)
 		res.redirect(appsettings.root + "/login");
 	else
-		res.render("quiz/criar", {titulo: "Novo Quiz",usuario: u, lista: await Tipo.ListarTipo() });
+		res.render("quiz/alterar", {titulo: "Novo Quiz",usuario: u, item: null, lista: await Tipo.ListarTipo() });
 }));
 
 router.get("/editar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
-	if (!u)
+	if (!u){
 		res.redirect(appsettings.root + "/login");
-	else
-		res.render("quiz/editar", { titulo: "Editar Quiz", usuario: u });
+	}
+	else{
+		let id = parseInt(req.query["qid"]);
+		let item: Quiz = null;
+
+		if(isNaN(id) || !(item = await Quiz.obter(id))){
+			res.render("home/nao-encontrado", { usuario: u });
+		}
+		else{
+			res.render("quiz/alterar", { titulo: "Editar Quiz", usuario: u, item: item, lista: await Tipo.ListarTipo() });
+		}
+	}
 }));
 
 router.get("/jogar", wrap(async (req: express.Request, res: express.Response) => {
@@ -51,10 +61,12 @@ router.get("/editarPerg", wrap(async (req: express.Request, res: express.Respons
 
 router.get("/listar", wrap(async (req: express.Request, res: express.Response) => {
 	let u = await Usuario.cookie(req);
+
 	if (!u || !u.admin)
 		res.redirect(appsettings.root + "/acesso");
 	else
-		res.render("quiz/listar", { titulo: "Gerenciar Quiz", usuario: u, lista: JSON.stringify(await Quiz.listar()) });
+		res.render("quiz/listar", { titulo: "Gerenciar Quizes", usuario: u, lista: JSON.stringify(await Quiz.listar())});
+
 }));
 
 export = router;

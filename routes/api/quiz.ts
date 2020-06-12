@@ -22,6 +22,7 @@ import Pergunta = require("../../models/quiz/pergunta");
 import Quiz = require("../../models/quiz/quiz");
 import Alternativa = require("../../models/quiz/alternativa");
 import Usuario = require("../../models/usuario");
+import { route } from "../home";
 
 // ROTAS
 // Salvar Quiz
@@ -102,4 +103,38 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
         return;
     res.json(await Quiz.listar());
 }));
+
+
+router.post('/alterar', wrap(async (req: express.Request, res: express.Response) => {
+    let q = req.body as Quiz;
+
+    console.log(q)
+   
+    jsonRes(res, 400, (q) ? await Quiz.editar(q) : "Dados inválidos");
+}));
+
+
+router.get('/obterPergunta', wrap(async(req: express.Request, res: express.Response) => {
+
+    let id = parseInt(req.query["quiz_id"]);
+
+    res.json(await Pergunta.listar(id));
+
+}));
+
+router.get('/excluir', wrap(async(req: express.Request, res: express.Response) => {
+    let id = parseInt(req.query["quiz_id"]);
+
+    jsonRes(res, 400, isNaN(id) ? "Dados invalidos " : await Quiz.excluir(id));
+    
+}));
+
+router.get('/excluirPerg', wrap(async(req: express.Request, res: express.Response) => {
+    let quiz_id = parseInt(req.query["quiz_id"]);
+    let perg_id = parseInt(req.query["perg_id"]);
+
+    jsonRes(res, 400, (isNaN(quiz_id) || isNaN(perg_id)) ?  "Dados invalidos" : await Pergunta.excluir(quiz_id, perg_id));
+    
+}));
+
 export = router;
