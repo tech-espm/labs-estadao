@@ -13,7 +13,7 @@
 
 				<div class="form-group">
 					<label for="quiz_desc">Descrição</label>
-					<textarea id="quiz_desc" rows="3" name="quiz_desc" class="form-control" maxlength="500" style="resize: vertical;"  > <%=(item ? item.quiz_desc : '') %></textarea>
+					<textarea id="quiz_desc" rows="3" name="quiz_desc" class="form-control" maxlength="500" style="resize: vertical;"  ><%=(item ? item.quiz_desc : '') %></textarea>
 				</div>
 
 				<div class="form-group">
@@ -23,7 +23,7 @@
 
 				<div class="form-group">
 					<label for="quiz_script">HTML Personalizado (Final do body)</label>
-					<textarea id="quiz_script" rows="3" name="quiz_script" class="form-control" maxlength="1000" style="resize: vertical;" > <%=(item ? item.quiz_script : '') %></textarea>
+					<textarea id="quiz_script" rows="3" name="quiz_script" class="form-control" maxlength="1000" style="resize: vertical;" ><%=(item ? item.quiz_script : '') %></textarea>
 				</div>
 
 				<div class="form-group">
@@ -59,6 +59,16 @@
 
 <%- contentFor("styles") %>
 <style type="text/css">
+	.imagem {
+		display: block;
+		margin: 0px auto;
+		max-width: 100%;
+		max-height: 100px;
+		border-radius: 4px;
+		border: 1px solid #ddd;
+		box-shadow: 0 1px 0 #e5e5e5;
+	}
+
 	.filepond--root {
 		font-size: 1.5rem;
 	}
@@ -113,6 +123,9 @@
 				
 			JsonWebApi.postFormData("<%- root %>/api/quiz/alterar", formData, function (response) {
 				if (response.success) {
+					resetFilePond("imagem");
+					var versao = parseInt(response.value);
+					document.getElementById("imagemquizatual").setAttribute("src", versao ? ('<%- (root + "/uploads/quiz/" + item.quiz_id + "/" + item.quiz_id + ".jpg?") %>' + versao) : '<%- (root + "/imagens/placeholder.png") %>');
 					Notification.success("Quiz alterado com sucesso " + emoji.happy)
 				} else {
 					Notification.error(response.value, true);
@@ -123,7 +136,9 @@
 			JsonWebApi.postFormData("<%- root %>/api/quiz/salvar", formData, function (response) {
 				if (response.success) {
 					resetForm("#form-quiz");
-					location.href = "/quiz/criarPerg?quiz_id=" + response.value;
+					resetFilePond("imagem");
+					Notification.success("Quiz criado com sucesso " + emoji.happy)
+					//location.href = "/quiz/criarPerg?quiz_id=" + response.value;
 				} else {
 					Notification.error(response.value, true);
 				}

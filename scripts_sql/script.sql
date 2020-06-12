@@ -43,6 +43,7 @@ INSERT INTO tipo (tipo_id, tipo_nome, tipo_desc) VALUES
 CREATE TABLE quiz (
 	quiz_id INT NOT NULL AUTO_INCREMENT,
 	quiz_nome VARCHAR(100) NOT NULL,
+	quiz_nome_normalizado VARCHAR(100) NOT NULL,
 	quiz_desc VARCHAR(500) NOT NULL,
 	quiz_style VARCHAR(1000) NOT NULL,
 	quiz_script VARCHAR(1000) NOT NULL,
@@ -53,6 +54,7 @@ CREATE TABLE quiz (
 	-- PK, FK & UK
 	PRIMARY KEY (quiz_id),
 	UNIQUE KEY quiz_nome_UN (quiz_nome),
+	UNIQUE KEY quiz_nome_normalizado_UN (quiz_nome_normalizado),
 	KEY id_tipo_FK_idx (id_tipo),
 	CONSTRAINT id_tipo_FK FOREIGN KEY (id_tipo) REFERENCES tipo (tipo_id)
 );

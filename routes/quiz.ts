@@ -35,12 +35,8 @@ router.get("/editar", wrap(async (req: express.Request, res: express.Response) =
 	}
 }));
 
-router.get("/jogar", wrap(async (req: express.Request, res: express.Response) => {
-	let u = await Usuario.cookie(req);
-	if (!u)
-		res.redirect(appsettings.root + "/login");
-	else
-		res.render("quiz/jogar", { layout:"layout-jogo", titulo: "Jogar", usuario: u });
+router.get("/jogar/:n", wrap(async (req: express.Request, res: express.Response) => {
+	res.render("quiz/jogar", { layout:"layout-jogo", titulo: "Jogar", quiz: JSON.stringify(await Quiz.obterPorNomeComPerguntas(req.params["n"] as string)) });
 }));
 
 router.get("/criarPerg", wrap(async (req: express.Request, res: express.Response) => {

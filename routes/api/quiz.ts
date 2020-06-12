@@ -36,6 +36,17 @@ router.post("/salvar", multer().single("imagem"), wrap(async (req: express.Reque
     jsonRes(res, 400, (q && (!req["file"] || validaArquivo(req["file"]))) ? await Quiz.createQuiz(q, req["file"]) : "Dados inválidos");
 }));
 
+router.post('/alterar', multer().single("imagem"), wrap(async (req: express.Request, res: express.Response) => {
+    let q = req.body as Quiz;
+
+    if (q) {
+        q.quiz_id = parseInt(req.body.quiz_id);
+        q.id_tipo = parseInt(req.body.id_tipo);
+    }
+
+    jsonRes(res, 400, (q && (!req["file"] || validaArquivo(req["file"]))) ? await Quiz.editar(q, req["file"]) : "Dados inválidos");
+}));
+
 // Salvar Perguntas e Alternativas
 router.post("/salvarpergunta", wrap(async (req: express.Request, res: express.Response) => {
     const p = req.body as Pergunta;
@@ -103,16 +114,6 @@ router.get("/listar", wrap(async (req: express.Request, res: express.Response) =
         return;
     res.json(await Quiz.listar());
 }));
-
-
-router.post('/alterar', wrap(async (req: express.Request, res: express.Response) => {
-    let q = req.body as Quiz;
-
-    console.log(q)
-   
-    jsonRes(res, 400, (q) ? await Quiz.editar(q) : "Dados inválidos");
-}));
-
 
 router.get('/obterPergunta', wrap(async(req: express.Request, res: express.Response) => {
 

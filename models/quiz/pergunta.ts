@@ -29,14 +29,24 @@ export = class Pergunta {
 	public quiz_id: number;
 	public alternativas: Alternativa[];
 
-	public static async listar(quiz_id: number): Promise<Pergunta[]> {
+	public static async listar(quiz_id: number, alternativas: boolean = false): Promise<Pergunta[]> {
 		let lista: Pergunta[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
 			lista = (await sql.query(
 				"SELECT perg_id, perg_titulo, perg_texto, perg_img, perg_pontuacao, perg_resp_texto, perg_resp_img, quiz_id FROM pergunta WHERE quiz_id = ?",
 				[quiz_id]
-			)) as Pergunta[];
+            )) as Pergunta[];
+            
+			if (lista && lista.length && alternativas) {
+                for (let i = lista.length - 1; i >= 0; i--) {
+                    const item = lista[i];
+                    item.alternativas = (await sql.query(
+                        "SELECT alt_id, alt_texto, alt_img, alt_correta, perg_id FROM alternativa WHERE perg_id = ?",
+                        [item.perg_id]
+                    )) as Alternativa[];
+                }
+			}
         });
         
 

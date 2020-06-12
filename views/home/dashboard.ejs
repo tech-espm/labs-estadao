@@ -1,8 +1,12 @@
 ﻿<div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
-			<div class="panel-body">
-				Um sistema!
+			<div class="panel-body text-center">
+				<% if (usuario.admin) { %>
+				Utilize os menus ao lado para criar e editar os quizes, as perguntas, além dos usuários que têm acesso ao sistema.
+				<% } else { %>
+				Utilize os menus ao lado para criar e editar os quizes e as perguntas.
+				<% } %>
 			</div>
 		</div>
 	</div>

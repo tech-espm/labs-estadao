@@ -64,26 +64,44 @@
 	</div>
 </div>
 
+<div class="modal fade" tabindex="-1" role="dialog" id="modalLink">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Link do Quiz</h4>
+			</div>
+			<div class="modal-body">
+				<div class="col-xs-space-bottom"><button id="btnLink" type="button" class="btn btn-primary"><i class="fa fa-copy"></i>Copiar</button></div>
+				<a id="aLink" href="#" target="_blank" style="word-break: break-all;"></a>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline btn-default" data-dismiss="modal"><i class="fa fa-times"></i>Fechar</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <%- contentFor("scripts") %>
 <script type="text/javascript">
 	//<![CDATA[
 	"use strict";
 
-	let tabela = prepareDataTable("tabela", {
+	var quiz, trClicada, tabelaPergunta, perguntaParaExcluir, tabela = prepareDataTable("tabela", {
 		order: [[1, "asc"]],
 		deferRender: true,
 		columns: [
-			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "quiz_id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/quiz/editar?qid="+ row.quiz_id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <a target=\"_blank\" title=\"Criar Pergunta\" href=\"<%- root %>/quiz/criarPerg?quiz_id="+ row.quiz_id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-plus\"></i></a> <button title=\"Gerenciar Perguntas\" type=\"button\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-comments\"></i></button> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
+			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "quiz_id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/quiz/editar?qid="+ row.quiz_id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <a target=\"_blank\" title=\"Criar Pergunta\" href=\"<%- root %>/quiz/criarPerg?quiz_id="+ row.quiz_id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-plus\"></i></a> <button title=\"Gerenciar Perguntas\" type=\"button\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-comments\"></i></button> <button title=\"Link de Compartilhamento\" type=\"button\" data-link=\"1\" class=\"btn btn-outline btn-default\"><i class=\"fa fa-nomargin fa-share-alt\"></i></button> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
 			{ title: "Nome", "class": "col-25", render: encode, data: "quiz_nome" },
 			{ title: "Descrição", "class": "col-50", render: encode, data: "quiz_desc" },
-			{ title: "Tipo", "class": "col-25", render: encode, data: "tipo_nome" },
+			{ title: "Tipo", "class": "col-min", render: encode, data: "tipo_nome" },
 		],
 		data: <%- lista %>,
 		export: { title: "Quizes" }
 		
 	});
 
-	var quiz, trClicada, tabelaPergunta, perguntaParaExcluir;
+	prepareCopyHandler(document.getElementById("modalLink"), "#btnLink");
 
 	$("#tabela").on("click", "tbody button", function () {
 		if (JsonWebApi.active)
@@ -95,6 +113,20 @@
 			$("#lblNome").text(quiz.quiz_nome);
 
 			$("#modalExcluir").modal({
+				backdrop: "static",
+				keyboard: true
+			});
+		} else if (this.getAttribute("data-link")) {
+			var url = location.href, i = url.lastIndexOf("/listar"), a;
+			url = url.substr(0, i) + "/jogar/" + encodeURIComponent(quiz.quiz_nome_normalizado).replace(/\%20/g, "+");
+
+			a = document.getElementById("aLink");
+			a.setAttribute("href", url);
+			a.textContent = url.substr(url.indexOf("://") + 3);
+
+			document.getElementById("btnLink").setAttribute("data-clipboard-text", url);
+
+			$("#modalLink").modal({
 				backdrop: "static",
 				keyboard: true
 			});
@@ -130,7 +162,7 @@
 
 		JsonWebApi.get("<%- root %>/api/quiz/excluirPerg", function (response) {
 			if (response.success) {
-				Notification.success("Pergunta removida com sucesso! " + emoji.happy);
+				Notification.success("Pergunta excluída com sucesso! " + emoji.happy);
 				tabelaPergunta.row(trClicada).remove().draw();
 			} else {
 				Notification.error(response.value, true);
@@ -153,7 +185,7 @@
 
 		JsonWebApi.get("<%- root %>/api/quiz/excluir", function (response) {
 			if (response.success) {
-				Notification.success("Quiz removido com sucesso! " + emoji.happy);
+				Notification.success("Quiz excluído com sucesso! " + emoji.happy);
 				tabela.row(trClicada).remove().draw();
 			} else {
 				Notification.error(response.value, true);
@@ -190,8 +222,8 @@
 					columns: [
 						{ title: "", "class": "col-min", searchable: false, orderable: false, data: "perg_id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"<%- root %>/quiz/editarPerg?quiz_id="+ quiz.quiz_id + "&perg_id=" + v + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Excluir\" type=\"button\" onclick=\"prepararExcluirPergunta(this)\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
 						{ title: "Titulo", "class": "col-25", render: encode, data: "perg_titulo" },
-						{ title: "Texto", "class": "col-50", render: encode, data: "perg_texto" },
-						{ title: "Pontuação", "class": "col-50", render: encode, data: "perg_resp_texto" },
+						{ title: "Descrição", "class": "col-50", render: encode, data: "perg_texto" },
+						{ title: "Pontuação", "class": "col-min text-right", data: "perg_pontuacao" },
 					],
 					export: { title: "Perguntas" },
 					data: response.value
