@@ -66,9 +66,14 @@ export = class Quiz {
 		let lista: Quiz[] = null;
 
 		await Sql.conectar(async (sql: Sql) => {
+<<<<<<< HEAD
 			lista = await sql.query("SELECT q.quiz_id, q.quiz_nome, q.quiz_desc, t.tipo_nome FROM quiz q INNER JOIN tipo t ON q.id_tipo = t.tipo_id") as Quiz[];
         });
         
+=======
+			lista = await sql.query("select quiz_id, quiz_nome, quiz_data_cria from quiz order by quiz_id asc") as Quiz[];
+		});
+>>>>>>> b191382161c9d2c0816477f61f2a5b7865fc4600
 
 		return (lista || []);
     }
