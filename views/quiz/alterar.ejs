@@ -111,7 +111,7 @@
 
 			//<% if (item) { %>
 				
-			JsonWebApi.postFormData("/api/quiz/alterar", formData, function (response) {
+			JsonWebApi.postFormData("<%- root %>/api/quiz/alterar", formData, function (response) {
 				if (response.success) {
 					Notification.success("Quiz alterado com sucesso " + emoji.happy)
 				} else {
@@ -120,7 +120,7 @@
 			});
 			//<% } else { %>
 
-			JsonWebApi.postFormData("/api/quiz/salvar", formData, function (response) {
+			JsonWebApi.postFormData("<%- root %>/api/quiz/salvar", formData, function (response) {
 				if (response.success) {
 					resetForm("#form-quiz");
 					location.href = "/quiz/criarPerg?quiz_id=" + response.value;

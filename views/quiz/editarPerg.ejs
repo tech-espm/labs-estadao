@@ -176,7 +176,7 @@
 			return;
 		}
 
-		JsonWebApi.postFormData("/api/quiz/uploadimagem?quiz_id=" + quiz_id + "&perg_id=" + perg_id + "&alt_id=" + imagens[i].alt_id + "&tipo=" + imagens[i].tipo, formData, function (response) {
+		JsonWebApi.postFormData("<%- root %>/api/quiz/uploadimagem?quiz_id=" + quiz_id + "&perg_id=" + perg_id + "&alt_id=" + imagens[i].alt_id + "&tipo=" + imagens[i].tipo, formData, function (response) {
 			if (response.success) {
 				resetFilePond(imagens[i].id);
 				//<% if (pergunta) { %>
@@ -263,7 +263,7 @@
 
 			Notification.wait();
 
-			JsonWebApi.post("/api/quiz/salvarpergunta", pergunta, function (response) {
+			JsonWebApi.post("<%- root %>/api/quiz/salvarpergunta", pergunta, function (response) {
 				if (response.success) {
 					for (var i = 0, a = 0; i < proximaAlternativa; i++) {
 						if (!document.getElementById("alternativa" + i)) {
