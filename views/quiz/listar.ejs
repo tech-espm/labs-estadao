@@ -58,13 +58,13 @@
 		order: [[1, "asc"]],
 		deferRender: true,
 		columns: [
-			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"/quiz/criar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Perguntas\" type=\"button\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-eye\"></i></button> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
-			{ title: "Login", "class": "col-25", render: encode, data: "login" },
-			{ title: "Nome", "class": "col-50", render: encode, data: "nome" },
-			{ title: "Perfil", "class": "col-25", render: encode, data: "perfil" },
+			{ title: "", "class": "col-min", searchable: false, orderable: false, data: "quiz_id", render: function (v, type, row) { return "<a target=\"_blank\" title=\"Editar\" href=\"/quiz/criar?id=" + row.id + "\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-edit\"></i></a> <button title=\"Perguntas\" type=\"button\" class=\"btn btn-outline btn-primary\"><i class=\"fa fa-nomargin fa-eye\"></i></button> <button title=\"Excluir\" type=\"button\" data-excluir=\"1\" class=\"btn btn-outline btn-danger\"><i class=\"fa fa-nomargin fa-times\"></i></button>"; } },
+			{ title: "Id", "class": "col-25", render: encode, data: "quiz_id" },
+			{ title: "Nome", "class": "col-50", render: encode, data: "quiz_nome" },
+			{ title: "Tipo Quiz", "class": "col-25", render: encode, data: "id_tipo" }, //Aqui precisa pegar numero do tipo e escrever na tabela se é Pontuação ou outro
 		],
 		data: <%- lista %>,
-		export: { title: "Usuários" }
+		export: { title: "Quiz" }
 	});
 
 	var trClicada;
