@@ -36,7 +36,17 @@ router.get("/editar", wrap(async (req: express.Request, res: express.Response) =
 }));
 
 router.get("/jogar/:n", wrap(async (req: express.Request, res: express.Response) => {
-	res.render("quiz/jogar", { layout:"layout-jogo", titulo: "Jogar", quiz: JSON.stringify(await Quiz.obterPorNomeComPerguntas(req.params["n"] as string)) });
+	const quiz = await Quiz.obterPorNomeComPerguntas(req.params["n"] as string);
+	if (!quiz) {
+		res.render("shared/erro", { layout: "layout-externo" });
+	} else {
+		const quiz_style = quiz.quiz_style;
+		const quiz_script = quiz.quiz_script;
+		// Para não aparecer no JSON.stringify()
+		quiz.quiz_style = null;
+		quiz.quiz_script = null;
+		res.render("quiz/jogar", { layout:"layout-jogo", titulo: "Jogar", quiz: JSON.stringify(quiz), quiz_style: quiz_style, quiz_script: quiz_script });
+	}
 }));
 
 router.get("/criarPerg", wrap(async (req: express.Request, res: express.Response) => {

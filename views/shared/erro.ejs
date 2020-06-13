@@ -3,9 +3,11 @@
 		<div class="panel-body">
 			<h1><%=((typeof mensagem === "undefined" || !mensagem) ? "A página que você está tentando acessar não foi encontrada" : mensagem) %> 😢</h1>
 			<!--
+				<% if (typeof erro !== "undefined" && erro) { %>
 				<%= erro.status %>
 				
 				<%= erro.stack %>
+				<% } %>
 			-->
 		</div>
 	</div>
