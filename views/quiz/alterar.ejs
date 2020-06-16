@@ -138,7 +138,7 @@
 					resetForm("#form-quiz");
 					resetFilePond("imagem");
 					Notification.success("Quiz criado com sucesso " + emoji.happy)
-					//location.href = "/quiz/criarPerg?quiz_id=" + response.value;
+					location.href = "/quiz/criarPerg?quiz_id=" + response.value;
 				} else {
 					Notification.error(response.value, true);
 				}
