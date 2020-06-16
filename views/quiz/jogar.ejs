@@ -1,29 +1,53 @@
 <div class="panel panel-default">
-    <div><header></header></div>
     <div class="panel-body">
         <div id="secao" class="text-center">
-            <h1>Quiz do Estadão</h1>
-            <p>Descrição...</p>
-            <button name="start" class="btn btn-primary" onclick="atualizar()" type="button">Iniciar</button>
+            <img src="<%- root %>/uploads/quiz/<%- quiz.quiz_id %>/<%- quiz.quiz_id %>.jpg?v=<%- quiz.quiz_img %>" />
+            <h1><%= quiz.quiz_nome %></h1>
+            <p><%= quiz.quiz_desc %></p>
+            <button name="start" class="btn btn-primary btn-lg btn-block" onclick="atualizar()" type="button">Iniciar</button>
         </div>
     </div>
 </div>
 
 <%- contentFor("styles") %>
-<style type="text/css" name="personalizado">
+<style type="text/css">
+    body {
+        background-color: #fafafa;
+    }
 
-        header {
-    		padding: 175px 25px 75px;
-    		text-align: center;
-    		background-image: url('<%- root %>/imagens/logo.png'); /*imagem do quiz*/
-   			background-size: cover;
-   		 	background-position: center; 
-		}
+    h1, h2, p {
+        margin: 0px 0px 15px;
+    }
 
-    	body {
-			background-color: #fafafa;
-		}
+    .numeracao {
+        border: 1px solid #00f;
+        padding: 10px;
+        float: left;
+        width: auto;
+        border-radius: 4px;
+        margin: 0 15px 15px 0;
+    }
 
+    .panel {
+        background-color: #fff;
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .quiz-imagem, .pergunta-imagem, .noticia-imagem {
+        display: block;
+        margin: 0px auto 15px;
+        max-width: 100%;
+        max-height: 200px;
+    }
+
+    #secao > p:last-child {
+        margin-bottom: 0px;
+    }
+
+    .btn-default {
+        background-color: #ebf3f6;
+    }
 </style>
 <%- quiz_style %>
 
@@ -32,155 +56,7 @@
     "use strict";
     var secao = $("#secao");
     var carregando = false;
-    // Para utilizar o quiz pedido pelo usuário
-    /* var quiz = <%- quiz %>; */
-    var quiz = {
-        "quiz_id": 1,
-        "quiz_nome": "Quiz Teste",
-        "id_tipo": 1,
-        "perguntas": [
-            {
-                "perg_id": 100,
-                "perg_titulo": "Uma Pergunta",
-                "perg_texto": "Blah blah",
-                "perg_img": 1,
-                "perg_pontuacao": 10,
-                "perg_resp_texto": "Notícia",
-                "perg_resp_img": 1,
-                "alternativas": [
-                    {
-                        "alt_id": 101,
-                        "alt_texto": "a - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 102,
-                        "alt_texto": "b - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 103,
-                        "alt_texto": "c - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 104,
-                        "alt_texto": "d - Texto 1 XXX",
-                        "alt_img": 1,
-                        "alt_correta": 1
-                    },
-                ]
-            },
-            {
-                "perg_id": 200,
-                "perg_titulo": "Uma Pergunta 2",
-                "perg_texto": "Blah blah 2",
-                "perg_img": 1,
-                "perg_pontuacao": 10,
-                "perg_resp_texto": "Notícia 2",
-                "perg_resp_img": 1,
-                "alternativas": [
-                    {
-                        "alt_id": 201,
-                        "alt_texto": "a - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 202,
-                        "alt_texto": "b - Texto 1 XXX",
-                        "alt_img": 1,
-                        "alt_correta": 1
-                    },
-                    {
-                        "alt_id": 203,
-                        "alt_texto": "c - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 204,
-                        "alt_texto": "d - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                ]
-            },
-            {
-                "perg_id": 300,
-                "perg_titulo": "Uma Pergunta 3",
-                "perg_texto": "Blah blah 3",
-                "perg_img": 1,
-                "perg_pontuacao": 10,
-                "perg_resp_texto": "Notícia 3",
-                "perg_resp_img": 1,
-                "alternativas": [
-                    {
-                        "alt_id": 301,
-                        "alt_texto": "a - Texto 1 XXX",
-                        "alt_img": 1,
-                        "alt_correta": 1
-                    },
-                    {
-                        "alt_id": 302,
-                        "alt_texto": "b - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 303,
-                        "alt_texto": "c - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 304,
-                        "alt_texto": "d - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                ]
-            },
-            {
-                "perg_id": 400,
-                "perg_titulo": "Uma Pergunta 4",
-                "perg_texto": "Blah blah 4",
-                "perg_img": 1,
-                "perg_pontuacao": 10,
-                "perg_resp_texto": "Notícia 4",
-                "perg_resp_img": 1,
-                "alternativas": [
-                    {
-                        "alt_id": 401,
-                        "alt_texto": "a - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 402,
-                        "alt_texto": "b - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                    {
-                        "alt_id": 403,
-                        "alt_texto": "c - Texto 1 XXX",
-                        "alt_img": 1,
-                        "alt_correta": 1
-                    },
-                    {
-                        "alt_id": 404,
-                        "alt_texto": "d - Texto 1",
-                        "alt_img": 1,
-                        "alt_correta": 0
-                    },
-                ]
-            },
-        ]
-    };
+    var quiz = <%- JSON.stringify(quiz) %>;
     var respondido = false;
     var perguntaAtual = 0;
     var acertos = 0;
@@ -204,13 +80,38 @@
     function exibirProximaPergunta() {
         var pergunta = quiz.perguntas[perguntaAtual];
         
-        var html = '<h2>' + pergunta.perg_titulo + '</h2>';
+        var html = '<img class="pergunta-imagem" src="<%- root %>/uploads/quiz/' + quiz.quiz_id + '/';
+        if (pergunta.perg_img)
+            html += pergunta.perg_id + '/p' + pergunta.perg_id + ".jpg?v=" + pergunta.perg_img;
+        else
+            html += quiz.quiz_id + ".jpg?v=" + quiz.quiz_img;
+        html += '" />';
+
+        html += '<div class="numeracao">' + (perguntaAtual + 1) + ' de ' + quiz.perguntas.length + '</div>';
+
+        if (pergunta.perg_titulo)
+            html += '<h2>' + pergunta.perg_titulo + '</h2>';
+        if (pergunta.perg_texto)
+            html += '<p>' + pergunta.perg_texto + '</p>';
+
+        html += '<div id="noticia" class="noticia" style="display: none;">' +
+            '<hr />';
+        if (pergunta.perg_resp_img)
+            html += '<img class="noticia-imagem" src="<%- root %>/uploads/quiz/' + quiz.quiz_id + '/' + pergunta.perg_id + '/r' + pergunta.perg_id + '.jpg?v=' + pergunta.perg_resp_img + '" />';
+        html +=
+            '<p class="noticia-texto">' +
+            pergunta.perg_resp_texto +
+            '</p>'+
+            '<p class="noticia-aguarde" id="noticia-aguarde"><img alt="Aguarde" src="<%- root %>/imagens/aguarde.gif" /></p>' +
+            '<p class="noticia-botao" id="noticia-botao" style="display: none;"><button type="button" onclick="atualizar()" class="btn btn-primary btn-lg btn-block">Próxima</button></p>' +
+            '<hr />' +
+            '</div>';
         
         for (var i = 0; i < pergunta.alternativas.length; i++) {
             html +=
-                '<button ' +
+                '<p><button ' +
                 (pergunta.alternativas[i].alt_correta ? 'id="botao-correto"' : '') +
-                ' type="button" class="btn btn-default btn-outline btn-lg btn-block" onclick="responder(this, ' +
+                ' type="button" class="btn btn-default btn-lg btn-block" onclick="responder(this, ' +
                 pergunta.alternativas[i].alt_correta +
                 ',' +
                 pergunta.alternativas[i].alt_id +
@@ -220,17 +121,6 @@
                 '</p>';
         }
         
-        html += '<div id="noticia" class="noticia" style="display: none;">' +
-            '<hr />' +
-            '<img class="noticia-imagem" src="<%- root %>/uploads/quiz/' + quiz.quiz_id + '/perguntas/resp' + pergunta.perg_id + '.jpg?v=' + pergunta.perg_resp_img + '" />' +
-            '<div class="noticia-texto">' +
-            pergunta.perg_resp_texto +
-            '</div>'+
-            '<hr />' +
-            '<div class="noticia-aguarde" id="noticia-aguarde"><img src="<%- root %>/imagens/loading-white.gif" /></div>' +
-            '<div class="noticia-botao" id="noticia-botao" style="display: none;"><button type="button" onclick="atualizar()" class="btn btn-primary">Próxima</button></div>';
-            '</div>';
-
         secao.html(html);
 
         secao.fadeIn(400, "swing", function () {
@@ -272,7 +162,7 @@
     function exibirNoticia() {
         $("#noticia").fadeIn(400, "swing");
         ocultarAguarde();
-        //setTimeout(ocultarAguarde, 3000);
+        //@@@ setTimeout(ocultarAguarde, 2000);
     }
 
     function ocultarAguarde() {
@@ -293,7 +183,6 @@
     }
     
     function enviarTotais() {
-        // @@@ apenas por hora
         secao.fadeOut(400, "swing", exibirTotais);
         /*
         $.ajax({

@@ -45,7 +45,7 @@ router.get("/jogar/:n", wrap(async (req: express.Request, res: express.Response)
 		// Para não aparecer no JSON.stringify()
 		quiz.quiz_style = null;
 		quiz.quiz_script = null;
-		res.render("quiz/jogar", { layout:"layout-jogo", titulo: "Jogar", quiz: JSON.stringify(quiz), quiz_style: quiz_style, quiz_script: quiz_script });
+		res.render("quiz/jogar", { layout:"layout-jogo", titulo: "Jogar", quiz: quiz, quiz_style: quiz_style, quiz_script: quiz_script });
 	}
 }));
 

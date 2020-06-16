@@ -80,7 +80,7 @@ CREATE TABLE alternativa (
 	alt_id INT NOT NULL AUTO_INCREMENT,
 	alt_texto VARCHAR(500) NOT NULL,
 	alt_img INT NOT NULL,
-	alt_correta BOOLEAN,
+	alt_correta TINYINT(1) NOT NULL,
 	perg_id INT NOT NULL,
 	-- PK, FK & UK
 	PRIMARY KEY (alt_id),
