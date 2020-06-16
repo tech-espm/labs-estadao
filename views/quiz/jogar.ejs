@@ -48,6 +48,27 @@
     .btn-default {
         background-color: #ebf3f6;
     }
+
+    .btn-prox {
+        background-color: #006194;
+        border-radius: 8px;
+        width: 100%;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        border: none;
+        color: #fff;
+        padding: 15px 22px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+
+    .btn-prox:hover{
+        background-color: #457c99;
+    }
+
+
+
 </style>
 <%- quiz_style %>
 
@@ -103,7 +124,7 @@
             pergunta.perg_resp_texto +
             '</p>'+
             '<p class="noticia-aguarde" id="noticia-aguarde"><img alt="Aguarde" src="<%- root %>/imagens/aguarde.gif" /></p>' +
-            '<p class="noticia-botao" id="noticia-botao" style="display: none;"><button type="button" onclick="atualizar()" class="btn btn-primary btn-lg btn-block">Próxima</button></p>' +
+            '<p class="noticia-botao" id="noticia-botao" style="display: none ;"><button type="button" onclick="atualizar()" class="btn-prox">Próxima</button></p>' +
             '<hr />' +
             '</div>';
         
