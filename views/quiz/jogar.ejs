@@ -2,9 +2,9 @@
     <div class="panel-body">
         <div id="secao" class="text-center">
             <img src="<%- root %>/uploads/quiz/<%- quiz.quiz_id %>/<%- quiz.quiz_id %>.jpg?v=<%- quiz.quiz_img %>" />
-            <h1><%= quiz.quiz_nome %></h1>
-            <p><%= quiz.quiz_desc %></p>
-            <button name="start" class="btn btn-primary btn-lg btn-block" onclick="atualizar()" type="button">Iniciar</button>
+            <h1 style='text-align: center;'><%= quiz.quiz_nome %></h1>
+            <p style='text-align: center;'><%= quiz.quiz_desc %></p>
+            <button name="start" class="btn-prox" onclick="atualizar()" type="button">Iniciar</button>
         </div>
     </div>
 </div>
@@ -17,15 +17,18 @@
 
     h1, h2, p {
         margin: 0px 0px 15px;
+        text-align: left;
     }
 
     .numeracao {
-        border: 1px solid #00f;
+        border: 2px solid #006194;
         padding: 10px;
         float: left;
         width: auto;
-        border-radius: 4px;
+        border-radius: 7px;
         margin: 0 15px 15px 0;
+        color: #006194;
+        font-weight: 800;
     }
 
     .panel {
@@ -36,7 +39,7 @@
 
     .quiz-imagem, .pergunta-imagem, .noticia-imagem {
         display: block;
-        margin: 0px auto 15px;
+        margin: 40px auto 15px auto;
         max-width: 100%;
         max-height: 200px;
     }
@@ -48,6 +51,24 @@
     .btn-default {
         background-color: #ebf3f6;
     }
+
+    .btn-prox {
+        background-color: #006194;
+        border-radius: 8px;
+        width: 100%;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        border: none;
+        color: #fff;
+        padding: 15px 22px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        }
+ 
+    .btn-prox:hover{
+        background-color: #457c99;
+ }
 </style>
 <%- quiz_style %>
 
@@ -103,7 +124,7 @@
             pergunta.perg_resp_texto +
             '</p>'+
             '<p class="noticia-aguarde" id="noticia-aguarde"><img alt="Aguarde" src="<%- root %>/imagens/aguarde.gif" /></p>' +
-            '<p class="noticia-botao" id="noticia-botao" style="display: none;"><button type="button" onclick="atualizar()" class="btn btn-primary btn-lg btn-block">Próxima</button></p>' +
+            '<p class="noticia-botao" id="noticia-botao" style="display: none;"><button type="button" onclick="atualizar()" class="btn-prox">Próxima</button></p>' +
             '<hr />' +
             '</div>';
         
@@ -138,7 +159,6 @@
 
         respondido = true;
 
-        //if (opcao.val() == "1") {
         if (correta) {
             acertos++;
             pontuacao += quiz.perguntas[perguntaAtual].perg_pontuacao;
@@ -162,7 +182,6 @@
     function exibirNoticia() {
         $("#noticia").fadeIn(400, "swing");
         ocultarAguarde();
-        //@@@ setTimeout(ocultarAguarde, 2000);
     }
 
     function ocultarAguarde() {
@@ -208,7 +227,6 @@
     function exibirTotais() {
         var perc = Math.round(100 * acertos / quiz.perguntas.length);
         
-        // Vamos construir o html aqui. Existem outras alternativas...
         var html = '<h2>';
         if (perc >= 50)
             html += 'Parabéns você está por dentro das notícias atuais! Acertou ' + acertos + ' de ' + quiz.perguntas.length + ' perguntas.';
@@ -226,7 +244,7 @@
             '%</div>' +
             '</div>';
         
-        html += '<p><button type="button" onclick="reiniciar()" class="btn btn-default">Fazer novamente</button></p>';
+        html += '<p style="text-align:center;"><button type="button" onclick="reiniciar()" class="btn btn-default">Fazer novamente</button></p>';
         
         secao.html(html);
         
