@@ -25,6 +25,7 @@ export = class Quiz {
     public quiz_style: string; // Form
     public quiz_script: string; // Form
     public quiz_img: number; // Form
+    public quiz_timer: number; // Form
     public id_tipo: number; // Tipo FK
     public perguntas: Pergunta[];
 
@@ -63,7 +64,7 @@ export = class Quiz {
             try {
                 await sql.beginTransaction();
 
-                await sql.query('INSERT INTO quiz (quiz_nome, quiz_nome_normalizado, quiz_desc, quiz_style, quiz_script, quiz_img, id_tipo) VALUES (?, ?, ?, ?, ?, ?, ?)', [q.quiz_nome, q.quiz_nome_normalizado, q.quiz_desc, q.quiz_style, q.quiz_script, imagem ? 1 : 0, q.id_tipo]); //TODO falta a descricao no DB
+                await sql.query('INSERT INTO quiz (quiz_nome, quiz_nome_normalizado, quiz_desc, quiz_style, quiz_script, quiz_img, quiz_timer, id_tipo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [q.quiz_nome, q.quiz_nome_normalizado, q.quiz_desc, q.quiz_style, q.quiz_script, imagem ? 1 : 0, q.quiz_timer ? 1 : 0,q.id_tipo]); 
 
                 q.quiz_id = await sql.scalar('SELECT LAST_INSERT_ID()') as number; 
                 
@@ -95,8 +96,8 @@ export = class Quiz {
 
             // Inserting the question the DB
             await sql.query(
-                "UPDATE quiz SET quiz_nome = ?, quiz_nome_normalizado = ?, quiz_desc = ?, quiz_style = ?, quiz_script = ?, id_tipo = ? " + (imagem ? " , quiz_img = quiz_img + 1 " : "") + " WHERE quiz_id = ?",
-                [q.quiz_nome, q.quiz_nome_normalizado, q.quiz_desc,q.quiz_style, q.quiz_script, q.id_tipo, q.quiz_id]
+                "UPDATE quiz SET quiz_nome = ?, quiz_nome_normalizado = ?, quiz_desc = ?, quiz_style = ?, quiz_script = ?, id_tipo = ?, quiz_timer = ? " + (imagem ? " , quiz_img = quiz_img + 1 " : "") + " WHERE quiz_id = ?",
+                [q.quiz_nome, q.quiz_nome_normalizado, q.quiz_desc,q.quiz_style, q.quiz_script, q.id_tipo, q.quiz_timer, q.quiz_id]
             );
 
             // File Upload
@@ -128,7 +129,7 @@ export = class Quiz {
 
 		await Sql.conectar(async (sql: Sql) => {
             
-			lista = await sql.query("SELECT quiz_id, quiz_nome, quiz_nome_normalizado, quiz_desc,quiz_style, quiz_script, id_tipo, quiz_img  FROM quiz WHERE quiz_id = ?", [id]) as Quiz[];
+			lista = await sql.query("SELECT quiz_id, quiz_nome, quiz_nome_normalizado, quiz_desc,quiz_style, quiz_script, id_tipo, quiz_img, quiz_timer  FROM quiz WHERE quiz_id = ?", [id]) as Quiz[];
             
 		});
 
@@ -140,7 +141,7 @@ export = class Quiz {
 
 		await Sql.conectar(async (sql: Sql) => {
             
-			const lista = (await sql.query("SELECT quiz_id, quiz_nome, quiz_nome_normalizado, quiz_desc,quiz_style, quiz_script, id_tipo, quiz_img FROM quiz WHERE quiz_nome_normalizado = ?", [ajustarNome((nome || "").normalize().trim())])) as Quiz[];
+			const lista = (await sql.query("SELECT quiz_id, quiz_nome, quiz_nome_normalizado, quiz_desc,quiz_style, quiz_script, id_tipo, quiz_img, quiz_timer FROM quiz WHERE quiz_nome_normalizado = ?", [ajustarNome((nome || "").normalize().trim())])) as Quiz[];
             
 			if (lista && lista.length) {
 				item = lista[0];

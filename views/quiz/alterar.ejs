@@ -38,6 +38,14 @@
 				</div>
 
 				<div class="form-group">
+					<div class="clearfix col-xs-space-bottom">
+						<label for="quiz_timer">Timer</label>
+						<input type="checkbox" id="quiz_timer" name="quiz_timer" value="1" <%=((item && item.quiz_timer === 1) ?  'checked="checked"' : '') %>/>
+						
+					</div>
+				</div>
+
+				<div class="form-group">
 					<input type="file" id="imagem" name="imagem" style="display: none;" />
 				</div>
 
@@ -72,6 +80,7 @@
 	.filepond--root {
 		font-size: 1.5rem;
 	}
+
 </style>
 
 <%- contentFor("scripts") %>
@@ -102,6 +111,9 @@
 			quiz_script: {
 				required: false,
 				maxlength: 1000,
+			},
+			quiz_timer: {
+				required: false,
 			},
 			id_tipo: {
 				required: true,

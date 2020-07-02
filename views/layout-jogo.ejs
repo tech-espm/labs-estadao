@@ -9,12 +9,23 @@
 	<title><%=((typeof titulo === "undefined" || !titulo) ? "Estadão" : (titulo + " - Estadão")) %></title>
 
 	<%- include("cabecalho") %>
+	
+	<div style="width: 100%;background-color: #fafafa;">
+		<img style="display: block; margin-left: auto; margin-right: auto;  width: 170px; margin-top: 15px; " src="<%- root %>/imagens/estadao-logo-big.png" >
+		<p style="text-align: center; margin-top: 10px ; margin-bottom: 10px ; font-family: 'Flama-Book',Georgia,sans-serif; font-size: 13px; color:rgb(124, 124, 124) ;">Fundado em 1875, online desde 1995 </p>
+	</div>
+
+		
+	<div class="timer" id ="timer">
+		<p style="text-align: center;"><label id="minutes">00</label>:<label id="seconds">00</label></p>
+	</div>
 
 	
 	<style type="text/css">
 		html {
 			min-height: 100%;
 			height: 100%;
+			
 		}
 
 		.panel {
@@ -40,6 +51,14 @@
 			font-size: inherit;
 			white-space: normal;
 		}
+
+		.assinatura-container{
+			position: fixed; 
+			top: 97%; 
+			left: 50%; 
+			transform: translate(-50%, -50%);
+
+		}
 		
 	</style>
 	
@@ -51,6 +70,23 @@
 
 	<%- include("rodape") %>
 
+	<div class="assinatura-container">
+		<a href="https://assine.estadao.com.br/?utm_source=portal_estadao_selosuperior&utm_medium=portal_estadao_selosuperior&utm_campaign=portal_estadao_selosuperior&utm_content=portal_estadao_selosuperior">
+			<img style="margin: 10px ; " src="<%- root %>/imagens/banner.jpeg" >
+		</a>
+	</div>
+	
+	
+	<script type="text/javascript">
+	
+	// Timer
+	let minutesLabel = document.getElementById("minutes");
+    let secondsLabel = document.getElementById("seconds");
+	
+	
+	</script>
+
 	<%- defineContent("scripts") %>
+
 </body>
 </html>

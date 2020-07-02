@@ -25,7 +25,7 @@ router.get("/editar", wrap(async (req: express.Request, res: express.Response) =
 	else{
 		let id = parseInt(req.query["qid"]);
 		let item: Quiz = null;
-
+		
 		if(isNaN(id) || !(item = await Quiz.obter(id))){
 			res.render("home/nao-encontrado", { usuario: u });
 		}

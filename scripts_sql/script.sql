@@ -87,3 +87,8 @@ CREATE TABLE alternativa (
 	KEY perg_id_FK_idx (perg_id),
 	CONSTRAINT perg_id_FK FOREIGN KEY (perg_id) REFERENCES pergunta (perg_id)
 );
+
+
+-- Add column on Quiz Table --> timer
+ALTER TABLE `estadao`.`quiz` 
+	ADD COLUMN `quiz_timer` TINYINT(1) NOT NULL AFTER `quiz_data_mod`;
